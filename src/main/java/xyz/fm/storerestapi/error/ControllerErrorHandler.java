@@ -20,7 +20,7 @@ public class ControllerErrorHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleBadValidException(Exception exception) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        Error error = Error.INVALID_FORMAT;
+        Error error = Error.NOT_VALID;
         String detail = "";
 
         if (exception instanceof MethodArgumentNotValidException) {

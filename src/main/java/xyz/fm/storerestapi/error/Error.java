@@ -2,7 +2,7 @@ package xyz.fm.storerestapi.error;
 
 public enum Error {
 
-    INVALID_FORMAT("valid-001", "request data in invalid format"),;
+    NOT_VALID("valid-001", "요청한 데이터가 유효하지 않습니다."),;
 
     private String code;
     private String message;
