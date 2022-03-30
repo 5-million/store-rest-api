@@ -1,12 +1,12 @@
 package xyz.fm.storerestapi.dto.user;
 
-import xyz.fm.storerestapi.error.ErrorMessageConstant;
+import xyz.fm.storerestapi.error.ErrorMessage;
 
 import javax.validation.constraints.Email;
 
 public class WithdrawalRequest {
 
-    @Email(message = ErrorMessageConstant.NOT_CORRECT_FORMAT)
+    @Email(message = ErrorMessage.INVALID_FORMAT)
     private String email;
     private String name;
     private String password;
