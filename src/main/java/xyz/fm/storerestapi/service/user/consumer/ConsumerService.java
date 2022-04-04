@@ -12,6 +12,7 @@ import xyz.fm.storerestapi.error.Error;
 import xyz.fm.storerestapi.error.ErrorDetail;
 import xyz.fm.storerestapi.error.exception.DuplicationException;
 import xyz.fm.storerestapi.error.exception.InvalidPasswordException;
+import xyz.fm.storerestapi.error.exception.LoginException;
 import xyz.fm.storerestapi.error.exception.TypeMismatchException;
 import xyz.fm.storerestapi.repository.user.consumer.ConsumerRepository;
 import xyz.fm.storerestapi.service.user.UserService;
@@ -69,7 +70,14 @@ public class ConsumerService implements UserService<Consumer> {
 
     @Override
     public Consumer login(LoginRequest request) {
-        return null;
+        Consumer consumer = consumerRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new LoginException(Error.LOGIN_FAIL, ErrorDetail.NOT_FOUND_USER, true));
+
+        if (!consumer.login(request.getPassword())) {
+            throw new LoginException(Error.LOGIN_FAIL, ErrorDetail.INCORRECT_PWD, true);
+        }
+
+        return consumer;
     }
 
     @Override
