@@ -23,7 +23,7 @@ public class ControllerErrorHandler {
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException exception) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         Error error = exception.getError();
-        String detail = "";
+        String detail = exception.getDetail();
 
         if (exception instanceof DuplicationException) {
             status = HttpStatus.CONFLICT;
