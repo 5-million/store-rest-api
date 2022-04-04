@@ -14,12 +14,17 @@ public class Consumer extends BaseUserEntity {
 
     private Long reserves = 0L;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ads_receive_id")
+    private AdsReceive adsReceive;
+
     protected Consumer() {/* empty */}
 
     private Consumer(Builder builder) {
         super(builder.email, builder.name, builder.password, builder.phoneNumber);
         this.id = builder.id;
         this.reserves = builder.reserves;
+        this.adsReceive = builder.adsReceive;
     }
 
     public Long getId() {
@@ -30,19 +35,25 @@ public class Consumer extends BaseUserEntity {
         return reserves;
     }
 
+    public AdsReceive getAdsReceive() {
+        return adsReceive;
+    }
+
     public static class Builder {
         private Long id;
         private final String email;
         private final String name;
         private final String password;
         private final String phoneNumber;
+        private final AdsReceive adsReceive;
         private Long reserves = 0L;
 
-        public Builder(String email, String name, String password, String phoneNumber) {
+        public Builder(String email, String name, String password, String phoneNumber, AdsReceive adsReceive) {
             this.email = email;
             this.name = name;
             this.password = password;
             this.phoneNumber = phoneNumber;
+            this.adsReceive = adsReceive;
         }
 
         public Builder id(Long id) {

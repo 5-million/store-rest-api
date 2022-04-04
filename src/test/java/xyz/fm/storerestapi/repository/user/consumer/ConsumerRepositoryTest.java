@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import xyz.fm.storerestapi.entity.user.consumer.AdsReceive;
 import xyz.fm.storerestapi.entity.user.consumer.Consumer;
 
 import javax.persistence.EntityManager;
@@ -17,8 +18,21 @@ class ConsumerRepositoryTest {
     @Autowired private ConsumerRepository consumerRepository;
 
     private final Consumer testConsumer = new Consumer.Builder(
-            "abc@test.com", "name", "password", "01012345678"
+            "abc@test.com", "name", "password", "01012345678",
+            new AdsReceive(true, true, true)
     ).reserves(20000L).build();
+
+    @Test
+    @DisplayName("save success")
+    public void save_success() {
+        consumerRepository.save(testConsumer);
+
+        Consumer findConsumer = consumerRepository.findById(testConsumer.getId()).get();
+        AdsReceive findAdsReceive = em.find(AdsReceive.class, testConsumer.getAdsReceive().getId());
+
+        assertThat(findConsumer).isEqualTo(testConsumer);
+        assertThat(findConsumer.getAdsReceive()).isEqualTo(findAdsReceive);
+    }
 
     @Test
     @DisplayName("existsByEmail: email is null")

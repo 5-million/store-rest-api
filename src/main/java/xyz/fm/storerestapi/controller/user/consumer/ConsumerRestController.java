@@ -1,14 +1,13 @@
 package xyz.fm.storerestapi.controller.user.consumer;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.fm.storerestapi.controller.user.UserRestController;
 import xyz.fm.storerestapi.dto.user.DuplicationCheckResponse;
 import xyz.fm.storerestapi.dto.user.EmailCheckRequest;
 import xyz.fm.storerestapi.dto.user.PhoneNumberCheckRequest;
+import xyz.fm.storerestapi.dto.user.consumer.ConsumerJoinRequest;
 import xyz.fm.storerestapi.service.user.consumer.ConsumerService;
 import xyz.fm.storerestapi.util.PhoneNumberUtil;
 
@@ -41,5 +40,11 @@ public class ConsumerRestController implements UserRestController {
         return ResponseEntity.ok().body(
                 new DuplicationCheckResponse(consumerService.isExistPhoneNumber(phoneNumber))
         );
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("join")
+    public void join(@Valid @RequestBody ConsumerJoinRequest request) {
+        consumerService.join(request);
     }
 }
