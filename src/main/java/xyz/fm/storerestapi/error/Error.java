@@ -6,6 +6,7 @@ public enum Error {
     TYPE_MISMATCH("valid-002", "지원하지 않는 타입입니다."),
     INVALID_PASSWORD("valid-003", "유효하지 않는 비밀번호입니다."),
     DUPLICATE("conflict-001", "이미 존재합니다."),
+    LOGIN_FAIL("login-fail", "등록되지 않은 이메일이거나, 이메일 또는 비밀번호를 잘못 입력하셨습니다."),
     ;
 
     private String code;
