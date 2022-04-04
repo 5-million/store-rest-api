@@ -11,4 +11,6 @@ public class ErrorDetail {
 
     /* 확인용 메시지 */
     public static final String NOT_CONSUMER_JOIN_REQUEST = "Argument 타입이 ConsumerJoinRequest 가 아닙니다.";
+    public static final String NOT_FOUND_USER = "등록되지 않은 사용자입니다.";
+    public static final String INCORRECT_PWD = "사용자에대한 정확한 비밀번호가 아닙니다.";
 }
