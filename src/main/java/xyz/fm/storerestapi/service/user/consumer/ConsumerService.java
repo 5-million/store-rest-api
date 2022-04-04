@@ -41,6 +41,7 @@ public class ConsumerService implements UserService<Consumer> {
     }
 
     @Override
+    @Transactional
     public Consumer join(UserJoinRequest request) {
         if (!(request instanceof ConsumerJoinRequest)) {
             throw new TypeMismatchException(Error.TYPE_MISMATCH, ErrorDetail.NOT_CONSUMER_JOIN_REQUEST, true);
@@ -69,6 +70,7 @@ public class ConsumerService implements UserService<Consumer> {
     }
 
     @Override
+    @Transactional
     public Consumer login(LoginRequest request) {
         Consumer consumer = consumerRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new LoginException(Error.LOGIN_FAIL, ErrorDetail.NOT_FOUND_USER, true));
