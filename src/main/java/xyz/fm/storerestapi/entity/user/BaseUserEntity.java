@@ -1,6 +1,7 @@
 package xyz.fm.storerestapi.entity.user;
 
 import xyz.fm.storerestapi.entity.BaseTimeEntity;
+import xyz.fm.storerestapi.util.EncryptUtil;
 
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
@@ -41,5 +42,17 @@ public abstract class BaseUserEntity extends BaseTimeEntity {
 
     public LocalDateTime getLastLoginDate() {
         return lastLoginDate;
+    }
+
+    //== business ==//
+    public boolean login(String plainTextPassword) {
+        if (EncryptUtil.match(plainTextPassword, password)) {
+            updateLastLoginDate();
+            return true;
+        } else return false;
+    }
+
+    private void updateLastLoginDate() {
+        lastLoginDate = LocalDateTime.now();
     }
 }
