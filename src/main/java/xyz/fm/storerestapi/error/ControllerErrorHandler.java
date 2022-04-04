@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import xyz.fm.storerestapi.error.exception.CustomException;
+import xyz.fm.storerestapi.error.exception.DuplicationException;
 
 @RestControllerAdvice
 public class ControllerErrorHandler {
@@ -15,6 +17,19 @@ public class ControllerErrorHandler {
 
     private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, Error error, String detail) {
         return ResponseEntity.status(status).body(new ErrorResponse(error, detail));
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException exception) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        Error error = exception.getError();
+        String detail = "";
+
+        if (exception instanceof DuplicationException) {
+            status = HttpStatus.CONFLICT;
+        }
+
+        return buildResponse(status, error, detail);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
