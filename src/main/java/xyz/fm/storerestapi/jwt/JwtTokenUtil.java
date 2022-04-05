@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import xyz.fm.storerestapi.entity.user.BaseUserEntity;
 
 import javax.servlet.http.Cookie;
-import java.util.UUID;
 
 @Component
 public class JwtTokenUtil {
@@ -25,7 +24,11 @@ public class JwtTokenUtil {
     }
 
     public String generateToken(BaseUserEntity user) {
-        return UUID.randomUUID().toString();
+        return user.getEmail();
+    }
+
+    public String getEmailFromToken(String token) {
+        return token.split(" ")[1];
     }
 
     public Integer getExpired() {
