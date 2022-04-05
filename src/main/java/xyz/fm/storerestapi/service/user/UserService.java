@@ -1,6 +1,7 @@
 package xyz.fm.storerestapi.service.user;
 
 import xyz.fm.storerestapi.dto.user.LoginRequest;
+import xyz.fm.storerestapi.dto.user.PasswordChangeRequest;
 import xyz.fm.storerestapi.dto.user.UserJoinRequest;
 import xyz.fm.storerestapi.dto.user.WithdrawalRequest;
 import xyz.fm.storerestapi.entity.user.BaseUserEntity;
@@ -12,6 +13,6 @@ public interface UserService <T extends BaseUserEntity> {
     T getByEmail(String email);
     T join(UserJoinRequest request);
     T login(LoginRequest request);
-    T modify(UserJoinRequest request);
+    void changePassword(PasswordChangeRequest request);
     Boolean withdrawal(String email, WithdrawalRequest request);
 }
