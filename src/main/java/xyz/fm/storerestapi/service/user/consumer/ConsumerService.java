@@ -10,10 +10,7 @@ import xyz.fm.storerestapi.entity.user.consumer.AdsReceive;
 import xyz.fm.storerestapi.entity.user.consumer.Consumer;
 import xyz.fm.storerestapi.error.Error;
 import xyz.fm.storerestapi.error.ErrorDetail;
-import xyz.fm.storerestapi.error.exception.DuplicationException;
-import xyz.fm.storerestapi.error.exception.InvalidPasswordException;
-import xyz.fm.storerestapi.error.exception.LoginException;
-import xyz.fm.storerestapi.error.exception.TypeMismatchException;
+import xyz.fm.storerestapi.error.exception.*;
 import xyz.fm.storerestapi.repository.user.consumer.ConsumerRepository;
 import xyz.fm.storerestapi.service.user.UserService;
 import xyz.fm.storerestapi.util.EncryptUtil;
@@ -38,6 +35,12 @@ public class ConsumerService implements UserService<Consumer> {
     @Override
     public Boolean isExistPhoneNumber(String phoneNumber) {
         return consumerRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public Consumer getByEmail(String email) {
+        return consumerRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_USER));
     }
 
     @Override
