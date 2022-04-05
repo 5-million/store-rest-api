@@ -13,5 +13,5 @@ public interface UserService <T extends BaseUserEntity> {
     T join(UserJoinRequest request);
     T login(LoginRequest request);
     T modify(UserJoinRequest request);
-    int withdrawal(WithdrawalRequest request);
+    Boolean withdrawal(String email, WithdrawalRequest request);
 }
