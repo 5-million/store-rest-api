@@ -1,34 +1,15 @@
 package xyz.fm.storerestapi.dto.user;
 
-import xyz.fm.storerestapi.error.ErrorDetail;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 public class WithdrawalRequest {
 
-    @NotBlank(message = ErrorDetail.NOT_EMAIL_FORMAT)
-    @NotNull(message = "이메일은 " + ErrorDetail.NOT_NULL)
-    @Email(message = ErrorDetail.NOT_EMAIL_FORMAT)
-    private String email;
     private String name;
     private String password;
 
     public WithdrawalRequest() {/* empty */}
 
-    public WithdrawalRequest(String email, String name, String password) {
-        this.email = email;
+    public WithdrawalRequest(String name, String password) {
         this.name = name;
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getName() {
