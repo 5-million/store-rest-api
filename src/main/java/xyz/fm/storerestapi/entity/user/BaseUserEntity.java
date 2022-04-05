@@ -1,6 +1,9 @@
 package xyz.fm.storerestapi.entity.user;
 
 import xyz.fm.storerestapi.entity.BaseTimeEntity;
+import xyz.fm.storerestapi.error.Error;
+import xyz.fm.storerestapi.error.ErrorDetail;
+import xyz.fm.storerestapi.error.exception.UnauthorizedException;
 import xyz.fm.storerestapi.util.EncryptUtil;
 
 import javax.persistence.MappedSuperclass;
@@ -58,6 +61,14 @@ public abstract class BaseUserEntity extends BaseTimeEntity {
 
     public boolean isMatchedName(String name) {
         return this.name.equals(name);
+    }
+
+    public void changePassword(String oldPlainTextPassword, String newPlainTextPassword) {
+        if (isMatchedPassword(oldPlainTextPassword)) {
+            this.password = EncryptUtil.encode(newPlainTextPassword);
+        } else {
+            throw new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.INCORRECT_PWD);
+        }
     }
 
     private void updateLastLoginDate() {
