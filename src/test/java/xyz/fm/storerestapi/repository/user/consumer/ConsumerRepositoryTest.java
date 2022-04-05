@@ -93,4 +93,18 @@ class ConsumerRepositoryTest {
 
         assertThat(result).isTrue();
     }
+
+    @Test
+    public void delete() {
+        consumerRepository.save(testConsumer);
+        Long consumerId = testConsumer.getId();
+        Long adsReceiveId = testConsumer.getAdsReceive().getId();
+
+        consumerRepository.delete(testConsumer);
+        em.flush();
+        em.clear();
+
+        assertThat(consumerRepository.findById(consumerId).isEmpty()).isTrue();
+        assertThat(em.find(AdsReceive.class, adsReceiveId)).isNull();
+    }
 }

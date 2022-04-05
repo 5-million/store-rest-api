@@ -91,7 +91,19 @@ public class ConsumerService implements UserService<Consumer> {
     }
 
     @Override
-    public int withdrawal(WithdrawalRequest request) {
-        return 0;
+    @Transactional
+    public Boolean withdrawal(String email, WithdrawalRequest request) {
+        Consumer consumer = getByEmail(email);
+
+        if (!consumer.isMatchedName(request.getName())) {
+            throw new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.INCORRECT_NAME);
+        }
+
+        if (!consumer.isMatchedPassword(request.getPassword())) {
+            throw new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.INCORRECT_PWD);
+        }
+
+        consumerRepository.delete(consumer);
+        return true;
     }
 }

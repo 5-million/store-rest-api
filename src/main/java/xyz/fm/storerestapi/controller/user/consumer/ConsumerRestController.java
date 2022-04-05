@@ -81,4 +81,16 @@ public class ConsumerRestController implements UserRestController {
 
         return ResponseEntity.ok(new ConsumerInfo(consumer));
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("withdrawal")
+    public void withdrawal(@RequestBody WithdrawalRequest request, HttpServletRequest httpRequest) {
+        // spring security, jwt 구현 후 수정필요
+        String token = Optional.ofNullable(httpRequest.getHeader(JwtTokenUtil.JWT_KEY))
+                .orElseThrow(() -> new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.UNAUTHORIZED));
+
+        String email = jwtTokenUtil.getEmailFromToken(token);
+
+        consumerService.withdrawal(email, request);
+    }
 }
