@@ -9,6 +9,7 @@ public interface UserService <T extends BaseUserEntity> {
 
     Boolean isExistEmail(String email);
     Boolean isExistPhoneNumber(String phoneNumber);
+    T getByEmail(String email);
     T join(UserJoinRequest request);
     T login(LoginRequest request);
     T modify(UserJoinRequest request);
