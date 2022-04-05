@@ -13,6 +13,6 @@ public interface UserService <T extends BaseUserEntity> {
     T getByEmail(String email);
     T join(UserJoinRequest request);
     T login(LoginRequest request);
-    void changePassword(PasswordChangeRequest request);
+    void changePassword(String email, PasswordChangeRequest request);
     Boolean withdrawal(String email, WithdrawalRequest request);
 }
