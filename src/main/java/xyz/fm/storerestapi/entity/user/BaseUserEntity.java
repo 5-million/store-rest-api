@@ -46,10 +46,14 @@ public abstract class BaseUserEntity extends BaseTimeEntity {
 
     //== business ==//
     public boolean login(String plainTextPassword) {
-        if (EncryptUtil.match(plainTextPassword, password)) {
+        if (isMatchedPassword(plainTextPassword)) {
             updateLastLoginDate();
             return true;
         } else return false;
+    }
+
+    public boolean isMatchedPassword(String plainTextPassword) {
+        return EncryptUtil.match(plainTextPassword, password);
     }
 
     private void updateLastLoginDate() {
