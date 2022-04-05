@@ -56,6 +56,10 @@ public abstract class BaseUserEntity extends BaseTimeEntity {
         return EncryptUtil.match(plainTextPassword, password);
     }
 
+    public boolean isMatchedName(String name) {
+        return this.name.equals(name);
+    }
+
     private void updateLastLoginDate() {
         lastLoginDate = LocalDateTime.now();
     }
