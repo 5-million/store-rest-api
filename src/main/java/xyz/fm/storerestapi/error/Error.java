@@ -7,6 +7,7 @@ public enum Error {
     INVALID_PASSWORD("valid-003", "유효하지 않는 비밀번호입니다."),
     DUPLICATE("conflict-001", "이미 존재합니다."),
     LOGIN_FAIL("login-fail", "등록되지 않은 이메일이거나, 이메일 또는 비밀번호를 잘못 입력하셨습니다."),
+    NOT_FOUND("found-001", "찾을 수 없습니다."),
     ;
 
     private String code;
