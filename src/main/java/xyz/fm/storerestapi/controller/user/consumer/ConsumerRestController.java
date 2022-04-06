@@ -93,4 +93,17 @@ public class ConsumerRestController implements UserRestController {
 
         consumerService.withdrawal(email, request);
     }
+
+    @Override
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("change/pwd")
+    public void changePassword(@RequestBody PasswordChangeRequest request, HttpServletRequest httpRequest) {
+        // spring security, jwt 구현 후 수정필요
+        String token = Optional.ofNullable(httpRequest.getHeader(JwtTokenUtil.JWT_KEY))
+                .orElseThrow(() -> new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.UNAUTHORIZED));
+
+        String email = jwtTokenUtil.getEmailFromToken(token);
+
+        consumerService.changePassword(email, request);
+    }
 }

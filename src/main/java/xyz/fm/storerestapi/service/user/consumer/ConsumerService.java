@@ -3,6 +3,7 @@ package xyz.fm.storerestapi.service.user.consumer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.fm.storerestapi.dto.user.LoginRequest;
+import xyz.fm.storerestapi.dto.user.PasswordChangeRequest;
 import xyz.fm.storerestapi.dto.user.UserJoinRequest;
 import xyz.fm.storerestapi.dto.user.WithdrawalRequest;
 import xyz.fm.storerestapi.dto.user.consumer.ConsumerJoinRequest;
@@ -86,11 +87,6 @@ public class ConsumerService implements UserService<Consumer> {
     }
 
     @Override
-    public Consumer modify(UserJoinRequest request) {
-        return null;
-    }
-
-    @Override
     @Transactional
     public Boolean withdrawal(String email, WithdrawalRequest request) {
         Consumer consumer = getByEmail(email);
@@ -105,5 +101,17 @@ public class ConsumerService implements UserService<Consumer> {
 
         consumerRepository.delete(consumer);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(String email, PasswordChangeRequest request) {
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            throw new InvalidPasswordException(Error.INVALID_PASSWORD, ErrorDetail.PWD_NOT_EQUAL_TO_CONFIRM_PWD);
+        }
+
+        Consumer consumer = getByEmail(email);
+
+        consumer.changePassword(request.getOldPassword(), request.getNewPassword());
     }
 }
