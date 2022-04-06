@@ -7,11 +7,14 @@ import xyz.fm.storerestapi.dto.user.EmailCheckRequest;
 import xyz.fm.storerestapi.dto.user.PasswordChangeRequest;
 import xyz.fm.storerestapi.dto.user.PhoneNumberCheckRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 public interface UserRestController {
 
     ResponseEntity<DuplicationCheckResponse> checkEmailDuplication(@Valid @RequestBody EmailCheckRequest request);
     ResponseEntity<DuplicationCheckResponse> checkPhoneNumberDuplication(@Valid @RequestBody PhoneNumberCheckRequest request);
-    void changePassword(@RequestBody PasswordChangeRequest request);
+
+    // security, jwt 구현 후 수정
+    void changePassword(@RequestBody PasswordChangeRequest request, HttpServletRequest httpRequest);
 }
