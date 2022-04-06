@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.fm.storerestapi.error.exception.CustomException;
 import xyz.fm.storerestapi.error.exception.DuplicationException;
+import xyz.fm.storerestapi.error.exception.NotFoundException;
 import xyz.fm.storerestapi.error.exception.UnauthorizedException;
 
 @RestControllerAdvice
@@ -30,6 +31,8 @@ public class ControllerErrorHandler {
             status = HttpStatus.CONFLICT;
         } else if (exception instanceof UnauthorizedException) {
             status = HttpStatus.UNAUTHORIZED;
+        } else if (exception instanceof NotFoundException) {
+            status = HttpStatus.NOT_FOUND;
         }
 
         return buildResponse(status, error, detail);
