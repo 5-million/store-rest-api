@@ -59,6 +59,11 @@ public class Vendor extends BaseTimeEntity {
         return managers;
     }
 
+    //== business ==//
+    public void addManager(VendorManager manager) {
+        this.managers.add(manager);
+    }
+
     //== builder ==//
     public static class Builder {
         private Long id;

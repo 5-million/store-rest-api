@@ -53,24 +53,20 @@ public class VendorManager extends BaseUserEntity {
         private final String name;
         private final String password;
         private final String phoneNumber;
-        private Vendor vendor;
+        private final Vendor vendor;
         private VendorRole role = VendorRole.VENDOR_MANAGER;
         private Boolean permission = false;
 
-        public Builder(String email, String name, String password, String phoneNumber) {
+        public Builder(String email, String name, String password, String phoneNumber, Vendor vendor) {
             this.email = email;
             this.name = name;
             this.password = password;
             this.phoneNumber = phoneNumber;
+            this.vendor = vendor;
         }
 
         public Builder id(Long id) {
             this.id = id;
-            return this;
-        }
-
-        public Builder vendor(Vendor vendor) {
-            this.vendor = vendor;
             return this;
         }
 
