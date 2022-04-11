@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import xyz.fm.storerestapi.repository.user.vendor.VendorApiRepository;
 import xyz.fm.storerestapi.service.user.vendor.VendorService;
 
 @WebMvcTest(VendorRestController.class)
@@ -15,4 +16,5 @@ abstract class VendorRestControllerTest {
 
     @Autowired protected MockMvc mvc;
     @MockBean protected VendorService vendorService;
+    @MockBean protected VendorApiRepository vendorApiRepository;
 }
