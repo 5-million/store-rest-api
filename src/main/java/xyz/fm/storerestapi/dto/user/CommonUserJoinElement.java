@@ -55,4 +55,8 @@ public abstract class CommonUserJoinElement implements UserJoinRequest {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public boolean isValidPassword() {
+        return password.equals(confirmPassword);
+    }
 }
