@@ -25,6 +25,7 @@ public class VendorService {
         this.vendorRepository = vendorRepository;
     }
 
+    @Transactional
     public Vendor register(VendorRegisterRequest request) {
         if (!request.getAdmin().getPassword().equals(request.getAdmin().getConfirmPassword())) {
             throw new InvalidPasswordException(Error.INVALID_PASSWORD, ErrorDetail.PWD_NOT_EQUAL_TO_CONFIRM_PWD);
