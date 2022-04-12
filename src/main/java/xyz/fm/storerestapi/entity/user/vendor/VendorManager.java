@@ -46,6 +46,11 @@ public class VendorManager extends BaseUserEntity {
         return permission;
     }
 
+    //== business ==//
+    public boolean isAdmin() {
+        return this.role == VendorRole.VENDOR_ROOT;
+    }
+
     //== builder ==//
     public static class Builder {
         private Long id;

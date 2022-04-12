@@ -99,4 +99,9 @@ public class VendorService {
             throw new DuplicationException(Error.DUPLICATE, ErrorDetail.DUPLICATE_USER);
         }
     }
+
+    public VendorManager getManagerByEmail(String email) {
+        return vendorManagerRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_USER));
+    }
 }
