@@ -5,11 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.fm.storerestapi.dto.user.DuplicationCheckResponse;
 import xyz.fm.storerestapi.dto.user.EmailCheckRequest;
+import xyz.fm.storerestapi.dto.user.LoginRequest;
 import xyz.fm.storerestapi.dto.user.PhoneNumberCheckRequest;
-import xyz.fm.storerestapi.dto.user.vendor.VendorList;
-import xyz.fm.storerestapi.dto.user.vendor.VendorManagerJoinRequest;
-import xyz.fm.storerestapi.dto.user.vendor.VendorManagerList;
-import xyz.fm.storerestapi.dto.user.vendor.VendorRegisterRequest;
+import xyz.fm.storerestapi.dto.user.vendor.*;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.Error;
 import xyz.fm.storerestapi.error.ErrorDetail;
@@ -22,6 +20,7 @@ import xyz.fm.storerestapi.service.user.vendor.VendorService;
 import xyz.fm.storerestapi.util.PhoneNumberUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -87,5 +86,14 @@ public class VendorRestController {
         return ResponseEntity.ok(
                 new VendorManagerList(vendorManagerApiRepository.findByVendor(manager.getVendor()))
         );
+    }
+
+    @PostMapping("manager/login")
+    public ResponseEntity<VendorManagerLoginResponse> login(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletResponse httpResponse) {
+        VendorManager manager = vendorService.login(request);
+        httpResponse.addCookie(jwtTokenUtil.generateTokenCookie(manager));
+        return ResponseEntity.ok(new VendorManagerLoginResponse(manager));
     }
 }

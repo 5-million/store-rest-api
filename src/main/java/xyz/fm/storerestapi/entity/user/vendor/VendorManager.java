@@ -1,6 +1,9 @@
 package xyz.fm.storerestapi.entity.user.vendor;
 
 import xyz.fm.storerestapi.entity.user.BaseUserEntity;
+import xyz.fm.storerestapi.error.Error;
+import xyz.fm.storerestapi.error.ErrorDetail;
+import xyz.fm.storerestapi.error.exception.LoginException;
 
 import javax.persistence.*;
 
@@ -49,6 +52,15 @@ public class VendorManager extends BaseUserEntity {
     //== business ==//
     public boolean isAdmin() {
         return this.role == VendorRole.VENDOR_ROOT;
+    }
+
+    public boolean login(String plainTextPassword) {
+        if (super.login(plainTextPassword)) {
+            if (permission) return true;
+            else throw new LoginException(Error.NOT_APPROVED);
+        } else {
+            throw new LoginException(Error.LOGIN_FAIL, ErrorDetail.INCORRECT_PWD, true);
+        }
     }
 
     //== builder ==//

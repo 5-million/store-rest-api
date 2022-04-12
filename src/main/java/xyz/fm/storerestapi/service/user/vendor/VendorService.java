@@ -2,6 +2,7 @@ package xyz.fm.storerestapi.service.user.vendor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.fm.storerestapi.dto.user.LoginRequest;
 import xyz.fm.storerestapi.dto.user.vendor.VendorManagerJoinRequest;
 import xyz.fm.storerestapi.dto.user.vendor.VendorRegisterRequest;
 import xyz.fm.storerestapi.entity.user.vendor.Vendor;
@@ -102,6 +103,13 @@ public class VendorService {
 
     public VendorManager getManagerByEmail(String email) {
         return vendorManagerRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_USER));
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_USER, true));
+    }
+
+    @Transactional
+    public VendorManager login(LoginRequest request) {
+        VendorManager manager = getManagerByEmail(request.getEmail());
+        manager.login(request.getPassword());
+        return manager;
     }
 }

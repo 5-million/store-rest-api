@@ -10,6 +10,7 @@ public enum Error {
     NOT_FOUND("found-001", "찾을 수 없습니다."),
     UNAUTHORIZED("auth-001", "인증정보가 올바르지 않습니다."),
     NO_PERMISSION("perm-001", "권한이 없습니다."),
+    NOT_APPROVED("login-fail", "등록이 승인되지 않았습니다. 관리자에게 문의하세요."),
     ;
 
     private String code;
