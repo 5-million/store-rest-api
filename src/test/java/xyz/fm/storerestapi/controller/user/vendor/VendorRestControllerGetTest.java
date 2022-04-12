@@ -180,6 +180,7 @@ public class VendorRestControllerGetTest extends VendorRestControllerTest {
                 "manager@vendor.com",
                 "manager",
                 "01012345678",
+                VendorRole.VENDOR_MANAGER,
                 false
         );
 
@@ -208,6 +209,7 @@ public class VendorRestControllerGetTest extends VendorRestControllerTest {
                 .andExpect(jsonPath("$.vendorManagerList[0].email").value(managerInfo.getEmail()))
                 .andExpect(jsonPath("$.vendorManagerList[0].name").value(managerInfo.getName()))
                 .andExpect(jsonPath("$.vendorManagerList[0].phoneNumber").value(managerInfo.getPhoneNumber()))
+                .andExpect(jsonPath("$.vendorManagerList[0].role").value(managerInfo.getRole()))
                 .andExpect(jsonPath("$.vendorManagerList[0].permission").value(managerInfo.getPermission()));
     }
 }
