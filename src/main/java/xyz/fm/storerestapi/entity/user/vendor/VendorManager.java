@@ -4,8 +4,10 @@ import xyz.fm.storerestapi.entity.user.BaseUserEntity;
 import xyz.fm.storerestapi.error.Error;
 import xyz.fm.storerestapi.error.ErrorDetail;
 import xyz.fm.storerestapi.error.exception.LoginException;
+import xyz.fm.storerestapi.error.exception.NoPermissionException;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name = "STORE_VENDOR_MANAGER")
@@ -61,6 +63,27 @@ public class VendorManager extends BaseUserEntity {
         } else {
             throw new LoginException(Error.LOGIN_FAIL, ErrorDetail.INCORRECT_PWD, true);
         }
+    }
+
+    public Map<String, Set<String>> approve(List<VendorManager> targets) {
+        if (!isAdmin()) {
+            throw new NoPermissionException(Error.NO_PERMISSION, ErrorDetail.NOT_ADMIN);
+        }
+
+        Set<String> success = new HashSet<>();
+        Set<String> fail = new HashSet<>();
+        for (VendorManager target : targets) {
+            if (!target.permission) {
+                target.permission = true;
+                success.add(target.getEmail());
+            } else fail.add(target.getEmail());
+        }
+
+        Map<String, Set<String>> map = new HashMap<>();
+        map.put("success", success);
+        map.put("fail", fail);
+
+        return map;
     }
 
     //== builder ==//

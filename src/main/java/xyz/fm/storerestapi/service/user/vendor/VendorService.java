@@ -3,6 +3,8 @@ package xyz.fm.storerestapi.service.user.vendor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.fm.storerestapi.dto.user.LoginRequest;
+import xyz.fm.storerestapi.dto.user.vendor.VendorManagerApproveRequest;
+import xyz.fm.storerestapi.dto.user.vendor.VendorManagerApproveResult;
 import xyz.fm.storerestapi.dto.user.vendor.VendorManagerJoinRequest;
 import xyz.fm.storerestapi.dto.user.vendor.VendorRegisterRequest;
 import xyz.fm.storerestapi.entity.user.vendor.Vendor;
@@ -18,6 +20,11 @@ import xyz.fm.storerestapi.repository.user.vendor.VendorRepository;
 import xyz.fm.storerestapi.util.EncryptUtil;
 
 import javax.persistence.PersistenceException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static xyz.fm.storerestapi.dto.user.vendor.VendorManagerApproveResult.ApproveFail;
+import static xyz.fm.storerestapi.dto.user.vendor.VendorManagerApproveResult.ApproveSuccess;
 
 @Service
 @Transactional(readOnly = true)
@@ -111,5 +118,36 @@ public class VendorService {
         VendorManager manager = getManagerByEmail(request.getEmail());
         manager.login(request.getPassword());
         return manager;
+    }
+
+    @Transactional
+    public VendorManagerApproveResult approve(String adminEmail, VendorManagerApproveRequest request) {
+        VendorManager admin = getManagerByEmail(adminEmail);
+        List<VendorManager> targets = vendorManagerRepository.findByVendorAndEmailIn(admin.getVendor(), request.getTarget());
+
+        Map<String, Set<String>> result = admin.approve(targets);
+
+        Set<String> success = result.get("success");
+        Set<String> alreadyApproved = result.get("fail");
+        Set<String> notSameVendor = new HashSet<>();
+        for (String target : request.getTarget()) {
+            if (!success.contains(target) && !alreadyApproved.contains(target)) {
+                notSameVendor.add(target);
+            }
+        }
+
+        List<ApproveFail> fail = new ArrayList<>();
+        fail.addAll(
+                alreadyApproved.stream().map(f -> new ApproveFail(f, ApproveFail.ALREADY_APPROVED)).collect(Collectors.toList())
+        );
+
+        fail.addAll(
+                notSameVendor.stream().map(f -> new ApproveFail(f, ApproveFail.NOT_SAME_VENDOR)).collect(Collectors.toList())
+        );
+
+        return new VendorManagerApproveResult(
+                success.stream().map(ApproveSuccess::new).collect(Collectors.toList()),
+                fail
+        );
     }
 }

@@ -96,4 +96,15 @@ public class VendorRestController {
         httpResponse.addCookie(jwtTokenUtil.generateTokenCookie(manager));
         return ResponseEntity.ok(new VendorManagerLoginResponse(manager));
     }
+
+    @PatchMapping("manager/approve")
+    public ResponseEntity<VendorManagerApproveResult> approve(
+            @RequestBody VendorManagerApproveRequest request,
+            HttpServletRequest httpRequest) {
+        String token = Optional.ofNullable(httpRequest.getHeader(JwtTokenUtil.JWT_KEY))
+                .orElseThrow(() -> new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.UNAUTHORIZED));
+
+        String adminEmail = jwtTokenUtil.getEmailFromToken(token);
+        return ResponseEntity.ok(vendorService.approve(adminEmail, request));
+    }
 }

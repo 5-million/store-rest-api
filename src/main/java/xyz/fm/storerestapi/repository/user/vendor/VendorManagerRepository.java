@@ -2,9 +2,11 @@ package xyz.fm.storerestapi.repository.user.vendor;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import xyz.fm.storerestapi.entity.user.vendor.Vendor;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.repository.user.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface VendorManagerRepository extends UserRepository<VendorManager>, JpaRepository<VendorManager, Long> {
@@ -13,4 +15,6 @@ public interface VendorManagerRepository extends UserRepository<VendorManager>, 
     @Override
     @EntityGraph(attributePaths = {"vendor"})
     Optional<VendorManager> findByEmail(String email);
+
+    List<VendorManager> findByVendorAndEmailIn(Vendor vendor, List<String> emails);
 }
