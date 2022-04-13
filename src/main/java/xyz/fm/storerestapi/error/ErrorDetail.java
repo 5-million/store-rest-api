@@ -13,6 +13,8 @@ public class ErrorDetail {
     public static final String DUPLICATE_VENDOR = "이미 등록된 공급업체입니다.";
     public static final String NOT_FOUND_VENDOR = "등록되지 않은 공급업체입니다.";
     public static final String NOT_ADMIN = "ADMIN 이상의 권한이 필요합니다.";
+    public static final String DUPLICATE_CATEGORY = "이미 등록된 카테고리입니다.";
+    public static final String NOT_FOUND_CATEGORY = "등록되지 않은 카테고리입니다.";
 
     /* 확인용 메시지 */
     public static final String NOT_CONSUMER_JOIN_REQUEST = "Argument 타입이 ConsumerJoinRequest 가 아닙니다.";

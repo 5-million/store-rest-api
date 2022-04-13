@@ -52,6 +52,13 @@ public class Category extends BaseTimeEntity {
         return child;
     }
 
+    //== business ==//
+    public void addChild(Category child) {
+        child.parent = this;
+        child.depth = this.depth + 1;
+        this.child.add(child);
+    }
+
     //== builder ==//
     public static class Builder {
         private Long id;
