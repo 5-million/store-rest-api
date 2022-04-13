@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import xyz.fm.storerestapi.error.exception.CustomException;
-import xyz.fm.storerestapi.error.exception.DuplicationException;
-import xyz.fm.storerestapi.error.exception.NotFoundException;
-import xyz.fm.storerestapi.error.exception.UnauthorizedException;
+import xyz.fm.storerestapi.error.exception.*;
 
 @RestControllerAdvice
 public class ControllerErrorHandler {
@@ -33,6 +30,8 @@ public class ControllerErrorHandler {
             status = HttpStatus.UNAUTHORIZED;
         } else if (exception instanceof NotFoundException) {
             status = HttpStatus.NOT_FOUND;
+        } else if (exception instanceof NoPermissionException) {
+            status = HttpStatus.FORBIDDEN;
         }
 
         return buildResponse(status, error, detail);
