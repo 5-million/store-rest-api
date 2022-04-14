@@ -10,6 +10,7 @@ import xyz.fm.storerestapi.error.exception.EntityNotFoundException;
 import xyz.fm.storerestapi.repository.category.CategoryRepository;
 
 import javax.persistence.PersistenceException;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -49,4 +50,7 @@ public class CategoryService {
         }
     }
 
+    public List<Category> getAllSortByDepth() {
+        return categoryRepository.findAllSortByDepth();
+    }
 }
