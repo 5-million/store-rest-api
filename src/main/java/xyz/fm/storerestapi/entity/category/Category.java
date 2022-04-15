@@ -1,6 +1,7 @@
 package xyz.fm.storerestapi.entity.category;
 
 import xyz.fm.storerestapi.entity.BaseTimeEntity;
+import xyz.fm.storerestapi.entity.product.Product;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class Category extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private final List<Category> child = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private final List<Product> products = new ArrayList<>();
 
     protected Category() {/* empty */}
 
