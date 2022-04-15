@@ -2,8 +2,11 @@ package xyz.fm.storerestapi.entity.product;
 
 import xyz.fm.storerestapi.entity.BaseEntity;
 import xyz.fm.storerestapi.entity.category.Category;
+import xyz.fm.storerestapi.entity.item.Item;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "STORE_PRODUCT")
@@ -19,6 +22,9 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "product")
+    private final List<Item> items = new ArrayList<>();
 
     protected Product() {/* empty */}
 
@@ -43,6 +49,10 @@ public class Product extends BaseEntity {
 
     public Category getCategory() {
         return category;
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 
     //== builder ==//
