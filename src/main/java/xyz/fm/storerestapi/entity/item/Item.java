@@ -4,6 +4,8 @@ import xyz.fm.storerestapi.entity.BaseEntity;
 import xyz.fm.storerestapi.entity.product.Product;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "STORE_ITEM")
@@ -19,6 +21,9 @@ public class Item extends BaseEntity {
 
     private String selections;
     private Integer salesQuantity;
+
+    @OneToMany(mappedBy = "item")
+    private List<VendorItem> vendorItemList = new ArrayList<>();
 
     protected Item() {/* empty */}
 
@@ -43,6 +48,10 @@ public class Item extends BaseEntity {
 
     public Integer getSalesQuantity() {
         return salesQuantity;
+    }
+
+    public List<VendorItem> getVendorItemList() {
+        return vendorItemList;
     }
 
     //== builder ==//
