@@ -1,6 +1,7 @@
 package xyz.fm.storerestapi.entity.user.vendor;
 
 import xyz.fm.storerestapi.entity.BaseTimeEntity;
+import xyz.fm.storerestapi.entity.item.VendorItem;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class Vendor extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
     private List<VendorManager> managers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
+    private List<VendorItem> items = new ArrayList<>();
 
     protected Vendor() {/* empty */}
 
@@ -59,9 +63,17 @@ public class Vendor extends BaseTimeEntity {
         return managers;
     }
 
+    public List<VendorItem> getItems() {
+        return items;
+    }
+
     //== business ==//
     public void addManager(VendorManager manager) {
         this.managers.add(manager);
+    }
+
+    public void addItem(VendorItem item) {
+        this.items.add(item);
     }
 
     //== builder ==//

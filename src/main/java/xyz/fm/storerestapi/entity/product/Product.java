@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.entity.product;
 
+import xyz.fm.storerestapi.domain.ItemOptions;
 import xyz.fm.storerestapi.entity.BaseEntity;
 import xyz.fm.storerestapi.entity.category.Category;
 import xyz.fm.storerestapi.entity.item.Item;
@@ -23,7 +24,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private final List<Item> items = new ArrayList<>();
 
     protected Product() {/* empty */}
@@ -43,8 +44,8 @@ public class Product extends BaseEntity {
         return productName;
     }
 
-    public String getOptions() {
-        return options;
+    public ItemOptions getOptions() {
+        return ItemOptions.of(options);
     }
 
     public Category getCategory() {
@@ -53,6 +54,11 @@ public class Product extends BaseEntity {
 
     public List<Item> getItems() {
         return items;
+    }
+
+    //== business ==//
+    public void addItem(Item item) {
+        this.items.add(item);
     }
 
     //== builder ==//

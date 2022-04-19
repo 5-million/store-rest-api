@@ -7,6 +7,7 @@ import xyz.fm.storerestapi.error.Error;
 import xyz.fm.storerestapi.error.ErrorDetail;
 import xyz.fm.storerestapi.error.exception.DuplicationException;
 import xyz.fm.storerestapi.error.exception.EntityNotFoundException;
+import xyz.fm.storerestapi.error.exception.NotFoundException;
 import xyz.fm.storerestapi.repository.category.CategoryRepository;
 
 import javax.persistence.PersistenceException;
@@ -52,5 +53,10 @@ public class CategoryService {
 
     public List<Category> getAllSortByDepth() {
         return categoryRepository.findAllSortByDepth();
+    }
+
+    public Category getById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_CATEGORY));
     }
 }

@@ -15,6 +15,9 @@ public class ErrorDetail {
     public static final String NOT_ADMIN = "ADMIN 이상의 권한이 필요합니다.";
     public static final String DUPLICATE_CATEGORY = "이미 등록된 카테고리입니다.";
     public static final String NOT_FOUND_CATEGORY = "등록되지 않은 카테고리입니다.";
+    public static final String NOT_FOUND_PRODUCT = "등록되지 않은 product 입니다.";
+    public static final String NOT_FOUND_ITEM = "등록되지 않은 item 입니다.";
+    public static final String NO_PERMISSION = "승인되지 않은 사용자입니다.";
 
     /* 확인용 메시지 */
     public static final String NOT_CONSUMER_JOIN_REQUEST = "Argument 타입이 ConsumerJoinRequest 가 아닙니다.";

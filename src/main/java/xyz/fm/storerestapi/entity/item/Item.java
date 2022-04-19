@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.entity.item;
 
+import xyz.fm.storerestapi.domain.ItemOptions;
 import xyz.fm.storerestapi.entity.BaseEntity;
 import xyz.fm.storerestapi.entity.product.Product;
 
@@ -22,7 +23,7 @@ public class Item extends BaseEntity {
     private String selections;
     private Integer salesQuantity;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<VendorItem> vendorItemList = new ArrayList<>();
 
     protected Item() {/* empty */}
@@ -42,8 +43,8 @@ public class Item extends BaseEntity {
         return product;
     }
 
-    public String getSelections() {
-        return selections;
+    public ItemOptions getSelections() {
+        return ItemOptions.of(selections);
     }
 
     public Integer getSalesQuantity() {
@@ -52,6 +53,11 @@ public class Item extends BaseEntity {
 
     public List<VendorItem> getVendorItemList() {
         return vendorItemList;
+    }
+
+    //== business ==//
+    public void addVendorItem(VendorItem vendorItem) {
+        this.vendorItemList.add(vendorItem);
     }
 
     //== builder ==//

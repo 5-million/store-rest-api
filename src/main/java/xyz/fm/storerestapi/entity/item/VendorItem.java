@@ -63,20 +63,24 @@ public class VendorItem extends BaseEntity {
     //== builder ==//
     public static class Builder {
         private Long id;
-        private final Vendor vendor;
+        private Vendor vendor;
         private final Item item;
         private final Integer price;
         private Integer discountRate = 0;
         private Integer stock = 0;
 
-        public Builder(Vendor vendor, Item item, Integer price) {
-            this.vendor = vendor;
+        public Builder(Item item, Integer price) {
             this.item = item;
             this.price = price;
         }
 
         public Builder id(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder vendor(Vendor vendor) {
+            this.vendor = vendor;
             return this;
         }
 

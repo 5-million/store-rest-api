@@ -86,6 +86,10 @@ public class VendorManager extends BaseUserEntity {
         return map;
     }
 
+    public boolean isApproved() {
+        return this.permission;
+    }
+
     //== builder ==//
     public static class Builder {
         private Long id;
