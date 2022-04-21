@@ -70,7 +70,7 @@ public class ProductServiceRegisterTest extends ProductServiceTest {
         //then
         assertThat(result.getProductName()).isEqualTo(request.getProductName());
         assertThat(result.getCategory()).isEqualTo(category);
-        assertThat(result.getItems().size()).isEqualTo(1);
+        assertThat(result.getItemsSortBySalesQuantity().size()).isEqualTo(1);
         assertThat(vendor.getItems().size()).isEqualTo(1);
 
         verify(productRepository, times(1)).save(any(Product.class));
@@ -118,8 +118,8 @@ public class ProductServiceRegisterTest extends ProductServiceTest {
 
         //then
         assertThat(result.getProduct().getId()).isEqualTo(product.getId());
-        assertThat(result.getVendorItemList().size()).isEqualTo(1);
-        assertThat(result.getVendorItemList().get(0).getPrice()).isEqualTo(vendorItemRegisterRequest.getPrice());
+        assertThat(result.getVendorItemListSortByPrice().size()).isEqualTo(1);
+        assertThat(result.getVendorItemListSortByPrice().get(0).getPrice()).isEqualTo(vendorItemRegisterRequest.getPrice());
     }
 
     @Test

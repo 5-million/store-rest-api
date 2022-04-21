@@ -82,7 +82,11 @@ public class ProductService {
         }
 
         Vendor vendor = manager.getVendor();
-        VendorItem vendorItem = new VendorItem.Builder(item, request.getPrice()).vendor(vendor).build();
+        VendorItem vendorItem = new VendorItem.Builder(item, request.getPrice())
+                .discountRate(request.getDiscountRate())
+                .stock(request.getStock())
+                .vendor(vendor)
+                .build();
         vendorItemRepository.save(vendorItem);
         vendor.addItem(vendorItem);
 
