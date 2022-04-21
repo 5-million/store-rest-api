@@ -60,6 +60,11 @@ public class VendorItem extends BaseEntity {
         return stock;
     }
 
+    //== business ==//
+    public int realPrice() {
+        return (int) (price * (1 - (discountRate / 100.0)));
+    }
+
     //== builder ==//
     public static class Builder {
         private Long id;

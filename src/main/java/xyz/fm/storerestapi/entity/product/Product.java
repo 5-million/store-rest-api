@@ -7,7 +7,9 @@ import xyz.fm.storerestapi.entity.item.Item;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "STORE_PRODUCT")
@@ -24,8 +26,8 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private final List<Item> items = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<Item> items = new HashSet<>();
 
     protected Product() {/* empty */}
 
@@ -52,8 +54,10 @@ public class Product extends BaseEntity {
         return category;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Item> getItemsSortBySalesQuantity() {
+        List<Item> list =  new ArrayList<>(items);
+        list.sort((o1, o2) -> o2.getSalesQuantity() - o1.getSalesQuantity());
+        return list;
     }
 
     //== business ==//

@@ -92,4 +92,9 @@ public class ProductService {
 
         return vendorItem;
     }
+
+    public Product getAllFetchedById(Long productId) {
+        return productRepository.findAllFetchedById(productId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_PRODUCT));
+    }
 }

@@ -27,4 +27,8 @@ public class ItemOptions {
 
         return options.get(index);
     }
+
+    public boolean isEmpty() {
+        return options.isEmpty();
+    }
 }

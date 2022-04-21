@@ -5,8 +5,7 @@ import xyz.fm.storerestapi.entity.BaseEntity;
 import xyz.fm.storerestapi.entity.product.Product;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "STORE_ITEM")
@@ -24,7 +23,7 @@ public class Item extends BaseEntity {
     private Integer salesQuantity;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<VendorItem> vendorItemList = new ArrayList<>();
+    private Set<VendorItem> vendorItemList = new HashSet<>();
 
     protected Item() {/* empty */}
 
@@ -43,6 +42,10 @@ public class Item extends BaseEntity {
         return product;
     }
 
+    public String getSelectionsAsString() {
+        return selections;
+    }
+
     public ItemOptions getSelections() {
         return ItemOptions.of(selections);
     }
@@ -51,8 +54,10 @@ public class Item extends BaseEntity {
         return salesQuantity;
     }
 
-    public List<VendorItem> getVendorItemList() {
-        return vendorItemList;
+    public List<VendorItem> getVendorItemListSortByPrice() {
+        List<VendorItem> list = new ArrayList<>(vendorItemList);
+        list.sort(Comparator.comparing(VendorItem::realPrice));
+        return list;
     }
 
     //== business ==//

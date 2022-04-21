@@ -23,8 +23,8 @@ public class ProductRegisterResponse {
     private VendorInfo vendor;
 
     public ProductRegisterResponse(Product product) {
-        Item item = product.getItems().get(product.getItems().size() - 1);
-        VendorItem vendorItem = item.getVendorItemList().get(item.getVendorItemList().size() - 1);
+        Item item = product.getItemsSortBySalesQuantity().get(product.getItemsSortBySalesQuantity().size() - 1);
+        VendorItem vendorItem = item.getVendorItemListSortByPrice().get(item.getVendorItemListSortByPrice().size() - 1);
 
         this.category = new CategoryInfo(product.getCategory());
 

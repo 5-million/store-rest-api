@@ -7,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import xyz.fm.storerestapi.jwt.JwtTokenUtil;
+import xyz.fm.storerestapi.repository.product.ProductApiRepository;
 import xyz.fm.storerestapi.service.product.ProductService;
 
 @WebMvcTest(ProductRestController.class)
@@ -17,5 +18,6 @@ class ProductRestControllerTest {
 
     @Autowired protected MockMvc mvc;
     @MockBean protected ProductService productService;
+    @MockBean protected ProductApiRepository productApiRepository;
     @SpyBean protected JwtTokenUtil jwtTokenUtil;
 }
