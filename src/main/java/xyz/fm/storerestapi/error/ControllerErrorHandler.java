@@ -30,7 +30,7 @@ public class ControllerErrorHandler {
             status = HttpStatus.UNAUTHORIZED;
         } else if (exception instanceof NotFoundException) {
             status = HttpStatus.NOT_FOUND;
-        } else if (exception instanceof NoPermissionException) {
+        } else if (exception instanceof NoPermissionException || exception instanceof NotEntityOwnerException) {
             status = HttpStatus.FORBIDDEN;
         }
 
