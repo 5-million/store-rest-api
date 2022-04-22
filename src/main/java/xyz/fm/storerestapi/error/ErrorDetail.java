@@ -18,6 +18,7 @@ public class ErrorDetail {
     public static final String NOT_FOUND_PRODUCT = "등록되지 않은 product 입니다.";
     public static final String NOT_FOUND_ITEM = "등록되지 않은 item 입니다.";
     public static final String NO_PERMISSION = "승인되지 않은 사용자입니다.";
+    public static final String NOT_ENTITY_OWNER = "해당 정보는 사용자의 정보가 아닙니다.";
 
     /* 확인용 메시지 */
     public static final String NOT_CONSUMER_JOIN_REQUEST = "Argument 타입이 ConsumerJoinRequest 가 아닙니다.";
