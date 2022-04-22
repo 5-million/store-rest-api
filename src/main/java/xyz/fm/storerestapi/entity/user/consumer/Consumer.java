@@ -55,6 +55,13 @@ public class Consumer extends BaseUserEntity {
         return new ArrayList<>(shippingAddresses);
     }
 
+    //== business ==//
+    public void addShippingAddress(ShippingAddress shippingAddress) {
+        shippingAddress.setConsumer(this);
+        this.shippingAddresses.add(shippingAddress);
+    }
+
+    //== builder ==//
     public static class Builder {
         private Long id;
         private final String email;
