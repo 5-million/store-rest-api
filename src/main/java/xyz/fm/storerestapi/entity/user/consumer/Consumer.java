@@ -1,8 +1,13 @@
 package xyz.fm.storerestapi.entity.user.consumer;
 
+import xyz.fm.storerestapi.entity.shipping.ShippingAddress;
 import xyz.fm.storerestapi.entity.user.BaseUserEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "STORE_CONSUMER")
@@ -17,6 +22,9 @@ public class Consumer extends BaseUserEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ads_receive_id")
     private AdsReceive adsReceive;
+
+    @OneToMany(mappedBy = "consumer", cascade = CascadeType.ALL)
+    private Set<ShippingAddress> shippingAddresses = new HashSet<>();
 
     protected Consumer() {/* empty */}
 
@@ -37,6 +45,14 @@ public class Consumer extends BaseUserEntity {
 
     public AdsReceive getAdsReceive() {
         return adsReceive;
+    }
+
+    public Set<ShippingAddress> getShippingAddresses() {
+        return shippingAddresses;
+    }
+
+    public List<ShippingAddress> getShippingAddressesAsList() {
+        return new ArrayList<>(shippingAddresses);
     }
 
     public static class Builder {
