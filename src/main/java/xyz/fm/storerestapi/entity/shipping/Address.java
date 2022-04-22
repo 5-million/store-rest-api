@@ -41,4 +41,23 @@ public class Address {
         sb.append(")");
         return sb.toString();
     }
+
+    //== business ==//
+    public void modifyAll(Address newAddress) {
+        modifyZipcode(newAddress.getZipcode());
+        modifyAddress(newAddress.getAddress());
+        modifyDetailedAddress(newAddress.getDetailedAddress());
+    }
+
+    public void modifyZipcode(String newZipcode) {
+        this.zipcode = newZipcode;
+    }
+
+    public void modifyAddress(String newAddress) {
+        this.address = newAddress;
+    }
+
+    public void modifyDetailedAddress(String newDetailedAddress) {
+        this.detailedAddress = newDetailedAddress;
+    }
 }

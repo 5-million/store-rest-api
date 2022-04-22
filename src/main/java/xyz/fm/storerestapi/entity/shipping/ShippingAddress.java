@@ -61,6 +61,19 @@ public class ShippingAddress extends BaseEntity {
         this.consumer = consumer;
     }
 
+    public boolean isOwner(String consumerEmail) {
+        return consumer.getEmail().equals(consumerEmail);
+    }
+
+    public void modifyAll(ShippingAddress newShippingAddress) {
+        this.address.modifyAll(newShippingAddress.getAddress());
+        modifyDefaultAddress(newShippingAddress.isDefaultAddress());
+    }
+
+    public void modifyDefaultAddress(boolean defaultAddress) {
+        this.defaultAddress = defaultAddress;
+    }
+
     //== Builder ==//
     public static class Builder {
         private Long id;

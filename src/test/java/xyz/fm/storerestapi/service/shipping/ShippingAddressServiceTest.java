@@ -2,9 +2,11 @@ package xyz.fm.storerestapi.service.shipping;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.fm.storerestapi.entity.user.consumer.AdsReceive;
 import xyz.fm.storerestapi.entity.user.consumer.Consumer;
+import xyz.fm.storerestapi.repository.shipping.ShippingAddressRepository;
 
 @ExtendWith(MockitoExtension.class)
 abstract class ShippingAddressServiceTest {
@@ -17,6 +19,7 @@ abstract class ShippingAddressServiceTest {
             new AdsReceive(true, true, true)
     ).build();
 
+    @Mock protected ShippingAddressRepository shippingAddressRepository;
     @InjectMocks protected ShippingAddressServiceImpl shippingAddressService;
 
 }

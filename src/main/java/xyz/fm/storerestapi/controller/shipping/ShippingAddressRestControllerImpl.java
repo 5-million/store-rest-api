@@ -2,10 +2,9 @@ package xyz.fm.storerestapi.controller.shipping;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.fm.storerestapi.dto.shipping.ShippingAddressInfo;
+import xyz.fm.storerestapi.dto.shipping.ShippingAddressModifyRequest;
 import xyz.fm.storerestapi.dto.shipping.ShippingAddressRegisterRequest;
 import xyz.fm.storerestapi.entity.shipping.ShippingAddress;
 import xyz.fm.storerestapi.entity.user.consumer.Consumer;
@@ -17,6 +16,7 @@ import xyz.fm.storerestapi.service.shipping.ShippingAddressService;
 import xyz.fm.storerestapi.service.user.consumer.ConsumerService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -45,5 +45,21 @@ public class ShippingAddressRestControllerImpl implements ShippingAddressRestCon
                 new ShippingAddressInfo(shippingAddress),
                 HttpStatus.CREATED
         );
+    }
+
+    @Override
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void modify(
+            @PathVariable("id") Long shippingAddressId,
+            @Valid @RequestBody ShippingAddressModifyRequest request,
+            HttpServletRequest httpRequest) {
+        String token = Optional.ofNullable(httpRequest.getHeader(JwtTokenUtil.JWT_KEY))
+                .orElseThrow(() -> new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.UNAUTHORIZED));
+
+        String consumerEmail = jwtTokenUtil.getEmailFromToken(token);
+
+        request.setShippingAddressId(shippingAddressId);
+        shippingAddressService.modify(consumerEmail, request);
     }
 }
