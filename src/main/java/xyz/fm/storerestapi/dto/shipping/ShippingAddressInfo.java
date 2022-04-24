@@ -20,6 +20,15 @@ public class ShippingAddressInfo {
         this.isDefaultAddress = shippingAddress.isDefaultAddress();
     }
 
+    public ShippingAddressInfo(Long consumerId, Long shippingAddressId, String zipcode, String address, String detailedAddress, Boolean isDefaultAddress) {
+        this.consumerId = consumerId;
+        this.shippingAddressId = shippingAddressId;
+        this.zipcode = zipcode;
+        this.address = address;
+        this.detailedAddress = detailedAddress;
+        this.isDefaultAddress = isDefaultAddress;
+    }
+
     public Long getConsumerId() {
         return consumerId;
     }
@@ -42,5 +51,18 @@ public class ShippingAddressInfo {
 
     public Boolean getIsDefaultAddress() {
         return isDefaultAddress;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ShippingAddressInfo(");
+        sb.append("consumerId: " + consumerId);
+        sb.append(", shippingAddressId: " + shippingAddressId);
+        sb.append(", zipcode: " + zipcode);
+        sb.append(", address: " + address);
+        sb.append(", detailedAddress: " + detailedAddress);
+        sb.append(", isDefaultAddress: " + isDefaultAddress);
+        sb.append(")");
+        return sb.toString();
     }
 }

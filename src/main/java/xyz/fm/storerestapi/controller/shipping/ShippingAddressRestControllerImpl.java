@@ -4,14 +4,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.fm.storerestapi.dto.shipping.ShippingAddressInfo;
+import xyz.fm.storerestapi.dto.shipping.ShippingAddressInfoList;
 import xyz.fm.storerestapi.dto.shipping.ShippingAddressModifyRequest;
 import xyz.fm.storerestapi.dto.shipping.ShippingAddressRegisterRequest;
 import xyz.fm.storerestapi.entity.shipping.ShippingAddress;
 import xyz.fm.storerestapi.entity.user.consumer.Consumer;
 import xyz.fm.storerestapi.error.Error;
 import xyz.fm.storerestapi.error.ErrorDetail;
+import xyz.fm.storerestapi.error.exception.NotFoundException;
 import xyz.fm.storerestapi.error.exception.UnauthorizedException;
 import xyz.fm.storerestapi.jwt.JwtTokenUtil;
+import xyz.fm.storerestapi.repository.shipping.ShippingAddressApiRepository;
 import xyz.fm.storerestapi.service.shipping.ShippingAddressService;
 import xyz.fm.storerestapi.service.user.consumer.ConsumerService;
 
@@ -24,11 +27,17 @@ import java.util.Optional;
 public class ShippingAddressRestControllerImpl implements ShippingAddressRestController {
 
     private final ShippingAddressService shippingAddressService;
+    private final ShippingAddressApiRepository shippingAddressApiRepository;
     private final ConsumerService consumerService;
     private final JwtTokenUtil jwtTokenUtil;
 
-    public ShippingAddressRestControllerImpl(ShippingAddressService shippingAddressService, ConsumerService consumerService, JwtTokenUtil jwtTokenUtil) {
+    public ShippingAddressRestControllerImpl(
+            ShippingAddressService shippingAddressService,
+            ShippingAddressApiRepository shippingAddressApiRepository,
+            ConsumerService consumerService,
+            JwtTokenUtil jwtTokenUtil) {
         this.shippingAddressService = shippingAddressService;
+        this.shippingAddressApiRepository = shippingAddressApiRepository;
         this.consumerService = consumerService;
         this.jwtTokenUtil = jwtTokenUtil;
     }
@@ -83,5 +92,34 @@ public class ShippingAddressRestControllerImpl implements ShippingAddressRestCon
 
         Consumer consumer = consumerService.getByEmail(jwtTokenUtil.getEmailFromToken(token));
         shippingAddressService.designateDefaultShippingAddress(consumer, shippingAddressId);
+    }
+
+    @Override
+    @GetMapping("{id}")
+    public ResponseEntity<ShippingAddressInfo> getById(
+            @PathVariable("id") Long shippingAddressId,
+            HttpServletRequest httpRequest) {
+        String token = Optional.ofNullable(httpRequest.getHeader(JwtTokenUtil.JWT_KEY))
+                .orElseThrow(() -> new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.UNAUTHORIZED));
+
+        String consumerEmail = jwtTokenUtil.getEmailFromToken(token);
+
+        return ResponseEntity.ok(
+                shippingAddressApiRepository.findByIdAndConsumerEmail(shippingAddressId, consumerEmail)
+                        .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_SHIPPING_ADDRESS))
+        );
+    }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<ShippingAddressInfoList> getByConsumer(HttpServletRequest httpRequest) {
+        String token = Optional.ofNullable(httpRequest.getHeader(JwtTokenUtil.JWT_KEY))
+                .orElseThrow(() -> new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.UNAUTHORIZED));
+
+        String consumerEmail = jwtTokenUtil.getEmailFromToken(token);
+
+        return ResponseEntity.ok(
+                new ShippingAddressInfoList(shippingAddressApiRepository.findByConsumerEmail(consumerEmail))
+        );
     }
 }
