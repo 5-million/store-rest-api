@@ -54,4 +54,15 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
                 ).defaultAddress(request.isDefaultAddress()).build()
         );
     }
+
+    @Override
+    public void delete(String consumerEmail, Long shippingAddressId) {
+        ShippingAddress shippingAddress = getById(shippingAddressId);
+
+        if (!shippingAddress.isOwner(consumerEmail)) {
+            throw new NotEntityOwnerException(Error.NO_PERMISSION, ErrorDetail.NOT_ENTITY_OWNER);
+        }
+
+        shippingAddressRepository.delete(shippingAddress);
+    }
 }
