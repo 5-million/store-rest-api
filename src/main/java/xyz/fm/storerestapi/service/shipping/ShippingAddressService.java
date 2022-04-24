@@ -11,4 +11,5 @@ public interface ShippingAddressService {
     ShippingAddress getById(Long shippingAddressId);
     void modify(String consumerEmail, ShippingAddressModifyRequest request);
     void delete(String consumerEmail, Long shippingAddressId);
+    void designateDefaultShippingAddress(Consumer consumer, Long shippingAddressId);
 }

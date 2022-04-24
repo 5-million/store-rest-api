@@ -65,4 +65,11 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
 
         shippingAddressRepository.delete(shippingAddress);
     }
+
+    @Override
+    public void designateDefaultShippingAddress(Consumer consumer, Long shippingAddressId) {
+        if (!consumer.designateDefaultShippingAddress(shippingAddressId)) {
+            throw new NotFoundException(Error.NOT_FOUND, ErrorDetail.NOT_FOUND_SHIPPING_ADDRESS);
+        }
+    }
 }

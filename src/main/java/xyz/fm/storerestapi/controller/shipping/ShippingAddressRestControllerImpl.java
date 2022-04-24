@@ -73,4 +73,15 @@ public class ShippingAddressRestControllerImpl implements ShippingAddressRestCon
         String consumerEmail = jwtTokenUtil.getEmailFromToken(token);
         shippingAddressService.delete(consumerEmail, shippingAddressId);
     }
+
+    @Override
+    @PatchMapping("default/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void designateDefault(@PathVariable("id") Long shippingAddressId, HttpServletRequest httpRequest) {
+        String token = Optional.ofNullable(httpRequest.getHeader(JwtTokenUtil.JWT_KEY))
+                .orElseThrow(() -> new UnauthorizedException(Error.UNAUTHORIZED, ErrorDetail.UNAUTHORIZED));
+
+        Consumer consumer = consumerService.getByEmail(jwtTokenUtil.getEmailFromToken(token));
+        shippingAddressService.designateDefaultShippingAddress(consumer, shippingAddressId);
+    }
 }

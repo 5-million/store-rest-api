@@ -74,6 +74,10 @@ public class ShippingAddress extends BaseEntity {
         this.defaultAddress = defaultAddress;
     }
 
+    public void setDefaultAddress(boolean yn) {
+        this.defaultAddress = yn;
+    }
+
     //== Builder ==//
     public static class Builder {
         private Long id;

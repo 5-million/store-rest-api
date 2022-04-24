@@ -2,12 +2,12 @@ package xyz.fm.storerestapi.entity.user.consumer;
 
 import xyz.fm.storerestapi.entity.shipping.ShippingAddress;
 import xyz.fm.storerestapi.entity.user.BaseUserEntity;
+import xyz.fm.storerestapi.error.Error;
+import xyz.fm.storerestapi.error.ErrorDetail;
+import xyz.fm.storerestapi.error.exception.NotFoundException;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "STORE_CONSUMER")
@@ -59,6 +59,27 @@ public class Consumer extends BaseUserEntity {
     public void addShippingAddress(ShippingAddress shippingAddress) {
         shippingAddress.setConsumer(this);
         this.shippingAddresses.add(shippingAddress);
+    }
+
+    public boolean designateDefaultShippingAddress(Long shippingAddressId) {
+        ShippingAddress originDefaultShippingAddress = null;
+
+        boolean flag = false;
+        for (ShippingAddress shippingAddress : shippingAddresses) {
+            if (Objects.equals(shippingAddress.getId(), shippingAddressId)) {
+                shippingAddress.setDefaultAddress(true);
+                flag = true;
+            } else if (shippingAddress.isDefaultAddress()) {
+                originDefaultShippingAddress = shippingAddress;
+            }
+        }
+
+        if (flag && originDefaultShippingAddress != null) {
+            originDefaultShippingAddress.setDefaultAddress(false);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //== builder ==//

@@ -15,4 +15,5 @@ public interface ShippingAddressRestController {
     ResponseEntity<ShippingAddressInfo> register(@Valid @RequestBody ShippingAddressRegisterRequest request, HttpServletRequest httpRequest);
     void modify(@PathVariable("id") Long shippingAddressId, @Valid @RequestBody ShippingAddressModifyRequest request, HttpServletRequest httpRequest);
     void delete(@PathVariable("id") Long shippingAddressId, HttpServletRequest httpRequest);
+    void designateDefault(@PathVariable("id") Long shippingAddressId, HttpServletRequest httpRequest);
 }
