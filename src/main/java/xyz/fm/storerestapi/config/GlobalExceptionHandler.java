@@ -3,7 +3,6 @@ package xyz.fm.storerestapi.config;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import xyz.fm.storerestapi.error.CommonErrorCode;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.error.ErrorResponse;
 import xyz.fm.storerestapi.exception.CustomException;
@@ -24,7 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
-        final ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
+        final ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
         return buildErrorResponse(errorCode);
     }
 }
