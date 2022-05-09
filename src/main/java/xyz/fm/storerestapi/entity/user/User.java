@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.entity.user;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import xyz.fm.storerestapi.entity.BaseTimeEntity;
 
 import javax.persistence.Column;
@@ -31,6 +32,12 @@ public abstract class User extends BaseTimeEntity {
         this.password = password;
     }
 
+    //== business ==//
+    public void encryptPassword(PasswordEncoder passwordEncoder) {
+        password.encrypt(passwordEncoder);
+    }
+
+    //== basic ==//
     public Email getEmail() {
         return email;
     }

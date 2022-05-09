@@ -9,7 +9,9 @@ import javax.validation.constraints.Pattern;
 @Access(AccessType.FIELD)
 public class Phone {
 
-    @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{4})-?([0-9]{4})$", message = "It must be phone number format.")
+    public static final String CONSTRAINT_PHONE_MESSAGE = "It must be phone number format.";
+
+    @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{4})-?([0-9]{4})$", message = CONSTRAINT_PHONE_MESSAGE)
     private String phone;
 
     protected Phone() {/* empty */}
