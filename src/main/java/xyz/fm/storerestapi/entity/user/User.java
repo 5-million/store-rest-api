@@ -6,6 +6,7 @@ import xyz.fm.storerestapi.entity.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PostLoad;
 
 @MappedSuperclass
 public abstract class User extends BaseTimeEntity {
@@ -30,6 +31,12 @@ public abstract class User extends BaseTimeEntity {
         this.name = name;
         this.phone = phone;
         this.password = password;
+    }
+
+    @PostLoad
+    public void postLoad() {
+        email.postLoad();
+        phone.postLoad();
     }
 
     //== business ==//

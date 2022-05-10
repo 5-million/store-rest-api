@@ -1,8 +1,6 @@
 package xyz.fm.storerestapi.entity.user;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
 @Embeddable
 @Access(AccessType.FIELD)
@@ -13,16 +11,32 @@ public class Email {
     @javax.validation.constraints.Email(message = CONSTRAINT_EMAIL_MESSAGE)
     private String email;
 
-    private String domain;
+    @Transient private String id;
+    @Transient private String domain;
 
     protected Email() {/* empty */}
 
     public Email(String email) {
         this.email = email;
+        fillTransientField();
+    }
+
+    protected void postLoad() {
+        fillTransientField();
+    }
+
+    private void fillTransientField() {
+        String[] split = email.split("@");
+        this.id = split[0];
+        this.domain = split[1];
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getDomain() {
@@ -36,10 +50,6 @@ public class Email {
 
     //== business ==//
     public String encrypt() {
-        String[] split = this.email.split("@");
-        String id = split[0];
-        String domain = split[1];
-
         int halfOfIdLength = id.length() / 2;
         String encryptedId = id.substring(0, halfOfIdLength) + "*".repeat(id.length() - halfOfIdLength);
 
