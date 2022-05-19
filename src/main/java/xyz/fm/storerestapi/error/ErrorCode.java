@@ -10,10 +10,18 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "common-001", "Internal server error."),
     INVALID_ARGUMENT(BAD_REQUEST, "common-002", "invalid arguments included."),
 
+    // jwt
+    INVALID_SIGN_JWT(UNAUTHORIZED, "jwt-001", "invalid signature json web token."),
+    EXPIRED_JWT(UNAUTHORIZED, "jwt-002", "expired json web token."),
+    UNSUPPORTED_JWT(UNAUTHORIZED, "jwt-003", "unsupported json web token."),
+    INVALID_JWT(UNAUTHORIZED, "jwt-004", "invalid json web token."),
+    UNREGISTERED_JWT(NOT_FOUND, "jwt-005", "unregistered json web token."),
+
     // user
     DUPLICATE_EMAIL(CONFLICT, "user-001", "already registered email."),
     DUPLICATE_PHONE(CONFLICT, "user-002", "already registered phone number."),
     PWD_NOT_EQUAL_TO_CONFIRM_PWD(BAD_REQUEST, "user-003", "password not equal to confirm password."),
+    USER_NOT_FOUND(NOT_FOUND, "user-004", "unregistered user."),
 
     // consumer
     DUPLICATE_CONSUMER(CONFLICT, "consumer-001", "already registered consumer."),
