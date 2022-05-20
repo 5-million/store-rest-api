@@ -3,10 +3,7 @@ package xyz.fm.storerestapi.entity.user;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import xyz.fm.storerestapi.entity.BaseTimeEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PostLoad;
+import javax.persistence.*;
 
 @MappedSuperclass
 public abstract class User extends BaseTimeEntity {
@@ -21,16 +18,20 @@ public abstract class User extends BaseTimeEntity {
     @Column(unique = true)
     private Phone phone;
 
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
+
     @Embedded
     private Password password;
 
     protected User() {/* empty */}
 
-    protected User(Email email, String name, Phone phone, Password password) {
+    protected User(Email email, String name, Phone phone, Password password, Role role) {
         this.email = email;
         this.name = name;
         this.phone = phone;
         this.password = password;
+        this.role = role;
     }
 
     @PostLoad
@@ -59,5 +60,9 @@ public abstract class User extends BaseTimeEntity {
 
     public Password getPassword() {
         return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }

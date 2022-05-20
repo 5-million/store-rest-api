@@ -1,9 +1,6 @@
 package xyz.fm.storerestapi.entity.user.consumer;
 
-import xyz.fm.storerestapi.entity.user.Email;
-import xyz.fm.storerestapi.entity.user.Password;
-import xyz.fm.storerestapi.entity.user.Phone;
-import xyz.fm.storerestapi.entity.user.User;
+import xyz.fm.storerestapi.entity.user.*;
 
 import javax.persistence.*;
 
@@ -20,7 +17,7 @@ public class Consumer extends User {
     protected Consumer() {/* empty */}
 
     private Consumer(Builder builder) {
-        super(builder.email, builder.name, builder.phone, builder.password);
+        super(builder.email, builder.name, builder.phone, builder.password, Role.ROLE_CONSUMER);
         id = builder.id;
         adReceive = builder.adReceive;
     }
