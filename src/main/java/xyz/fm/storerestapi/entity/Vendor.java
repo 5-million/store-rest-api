@@ -1,6 +1,10 @@
 package xyz.fm.storerestapi.entity;
 
+import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Vendor extends BaseTimeEntity {
@@ -19,6 +23,9 @@ public class Vendor extends BaseTimeEntity {
 
     @Embedded
     private Address location;
+
+    @OneToMany(mappedBy = "vendor")
+    private List<VendorManager> vendorManagerList = new ArrayList<>();
 
     protected Vendor() {/* empty */}
 
@@ -48,6 +55,10 @@ public class Vendor extends BaseTimeEntity {
 
     public Address getLocation() {
         return location;
+    }
+
+    public List<VendorManager> getVendorManagerList() {
+        return vendorManagerList;
     }
 
     @Override
