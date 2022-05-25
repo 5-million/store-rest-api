@@ -18,7 +18,7 @@ public class Email {
 
     public Email(String email) {
         this.email = email;
-        fillTransientField();
+//        fillTransientField();
     }
 
     protected void postLoad() {
@@ -50,6 +50,8 @@ public class Email {
 
     //== business ==//
     public String encrypt() {
+        if (id == null || domain == null) fillTransientField();
+
         int halfOfIdLength = id.length() / 2;
         String encryptedId = id.substring(0, halfOfIdLength) + "*".repeat(id.length() - halfOfIdLength);
 

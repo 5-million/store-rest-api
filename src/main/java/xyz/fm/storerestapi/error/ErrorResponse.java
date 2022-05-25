@@ -54,7 +54,8 @@ public class ErrorResponse {
         private final String detail;
 
         public ValidationError(String field, String detail) {
-            this.field = field.split("\\.")[0];
+//            this.field = field.split("\\.")[0];
+            this.field = field;
             this.detail = detail;
         }
 
