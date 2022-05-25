@@ -22,6 +22,7 @@ public enum ErrorCode {
     DUPLICATE_PHONE(CONFLICT, "user-002", "already registered phone number."),
     PWD_NOT_EQUAL_TO_CONFIRM_PWD(BAD_REQUEST, "user-003", "password not equal to confirm password."),
     USER_NOT_FOUND(NOT_FOUND, "user-004", "unregistered user."),
+    LOGIN_FAIL(BAD_REQUEST, "user-005", "please check your email and password."),
 
     // consumer
     DUPLICATE_CONSUMER(CONFLICT, "consumer-001", "already registered consumer."),

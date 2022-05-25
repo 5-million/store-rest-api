@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.service;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,7 @@ import xyz.fm.storerestapi.dto.user.LoginRequest;
 import xyz.fm.storerestapi.entity.Jwt;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.entity.notfound.JwtNotFoundException;
+import xyz.fm.storerestapi.exception.value.invalid.LoginException;
 import xyz.fm.storerestapi.exception.value.invalid.jwt.CustomJwtException;
 import xyz.fm.storerestapi.jwt.JwtProvider;
 import xyz.fm.storerestapi.jwt.TokenType;
@@ -29,15 +31,19 @@ public class AuthService {
         this.jwtRepository = jwtRepository;
     }
 
-    public Jwt login(LoginRequest request) {
+    public Jwt login(LoginRequest request, String type) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
+                request.getEmail() + CustomUserDetailsService.EMAIL_TYPE_SEPARATOR + type,
                 request.getPassword()
         );
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        Jwt jwt = jwtProvider.issueToken(authentication);
-        return jwtRepository.save(jwt);
+        try {
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            Jwt jwt = jwtProvider.issueToken(authentication);
+            return jwtRepository.save(jwt);
+        } catch (BadCredentialsException e) {
+            throw new LoginException(ErrorCode.LOGIN_FAIL);
+        }
     }
 
     public Jwt reissueJwt(JwtReissueRequest request) {

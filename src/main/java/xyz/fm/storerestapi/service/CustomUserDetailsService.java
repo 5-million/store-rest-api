@@ -7,29 +7,41 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import xyz.fm.storerestapi.entity.user.consumer.Consumer;
+import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.error.ErrorCode;
-import xyz.fm.storerestapi.exception.entity.notfound.UserNotFoundException;
 import xyz.fm.storerestapi.repository.ConsumerRepository;
-import xyz.fm.storerestapi.repository.UserRepository;
+import xyz.fm.storerestapi.repository.VendorManagerRepository;
 
 import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    public static final String EMAIL_TYPE_SEPARATOR = ":";
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final ConsumerRepository consumerRepository;
+    private final VendorManagerRepository vendorManagerRepository;
+
+    public CustomUserDetailsService(ConsumerRepository consumerRepository, VendorManagerRepository vendorManagerRepository) {
+        this.consumerRepository = consumerRepository;
+        this.vendorManagerRepository = vendorManagerRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Consumer consumer = userRepository.findConsumerByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+        String[] split = username.split(EMAIL_TYPE_SEPARATOR);
+        Email email = new Email(split[0]);
+        String type = split[1];
 
-        return createUserDetails(consumer);
+        xyz.fm.storerestapi.entity.user.User user;
+        if (type.equals("csm"))
+            user = consumerRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+        else
+            user = vendorManagerRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
+
+        return createUserDetails(user);
     }
 
     private UserDetails createUserDetails(xyz.fm.storerestapi.entity.user.User user) {
