@@ -24,7 +24,7 @@ public class Vendor extends BaseTimeEntity {
     @Embedded
     private Address location;
 
-    @OneToMany(mappedBy = "vendor")
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
     private List<VendorManager> vendorManagerList = new ArrayList<>();
 
     protected Vendor() {/* empty */}
@@ -37,6 +37,13 @@ public class Vendor extends BaseTimeEntity {
         this.location = builder.location;
     }
 
+    //== business ==//
+    public void addManager(VendorManager manager) {
+        manager.setVendor(this);
+        vendorManagerList.add(manager);
+    }
+
+    //== basic ==//
     public Long getId() {
         return id;
     }

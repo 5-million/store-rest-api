@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import xyz.fm.storerestapi.entity.user.Email;
+import xyz.fm.storerestapi.entity.user.Password;
+import xyz.fm.storerestapi.entity.user.Phone;
+import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -90,5 +94,26 @@ class VendorTest {
 
         //then
         assertPersistenceException(this::emFlushAndClear);
+    }
+
+    @Test
+    void addManager() {
+        VendorManager executive = new VendorManager.Builder(
+                new Email("vendor@vendor.com"),
+                "executive",
+                new Phone("01012345678"),
+                new Password("password")
+        ).vendor(vendor).approved(true).buildExecutive();
+
+        vendor.addManager(executive);
+
+        em.persist(vendor);
+        em.flush();
+        em.clear();
+
+        assertNotNull(executive.getId());
+        VendorManager foundManager = em.find(VendorManager.class, executive.getId());
+        assertThat(vendor.getVendorManagerList().size()).isEqualTo(1);
+        assertThat(foundManager.getVendor().getId()).isEqualTo(vendor.getId());
     }
 }

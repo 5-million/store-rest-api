@@ -31,6 +31,12 @@ public class VendorManager extends User {
         this.approvalManager = builder.approvalManager;
     }
 
+    //== business ==//
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
+
+    //== basic ==//
     public Long getId() {
         return id;
     }

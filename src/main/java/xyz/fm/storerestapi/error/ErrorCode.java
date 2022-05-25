@@ -25,6 +25,11 @@ public enum ErrorCode {
 
     // consumer
     DUPLICATE_CONSUMER(CONFLICT, "consumer-001", "already registered consumer."),
+
+    //vendor
+    DUPLICATE_VENDOR_NAME(CONFLICT, "vendor-001", "already registered vendor name."),
+    DUPLICATE_VENDOR_REG_NUMBER(CONFLICT, "vendor-002", "already registered vendor regNumber."),
+
     ;
 
 
