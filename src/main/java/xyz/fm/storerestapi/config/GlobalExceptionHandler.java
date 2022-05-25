@@ -11,7 +11,10 @@ import xyz.fm.storerestapi.error.ErrorResponse;
 import xyz.fm.storerestapi.exception.CustomException;
 import xyz.fm.storerestapi.exception.value.duplicate.DuplicatePhoneException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -58,9 +61,20 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ErrorCode.INVALID_ARGUMENT, fieldErrors);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+        List<ErrorResponse.ValidationError> fieldErrors = constraintViolations
+                .stream()
+                .map(ErrorResponse.ValidationError::of)
+                .collect(Collectors.toList());
+
+        return buildErrorResponse(ErrorCode.INVALID_ARGUMENT, fieldErrors);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
-        log.warn(e.getMessage());
+        log.warn("{}: {}", e.getClass(), e.getMessage());
         final ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
         return buildErrorResponse(errorCode);
     }

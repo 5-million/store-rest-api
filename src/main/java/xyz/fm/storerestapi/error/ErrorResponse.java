@@ -3,6 +3,7 @@ package xyz.fm.storerestapi.error;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.validation.FieldError;
 
+import javax.validation.ConstraintViolation;
 import java.util.List;
 
 public class ErrorResponse {
@@ -61,6 +62,10 @@ public class ErrorResponse {
 
         public static ValidationError of(FieldError fieldError) {
             return new ValidationError(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        public static ValidationError of(ConstraintViolation<?> cv) {
+            return new ErrorResponse.ValidationError(cv.getPropertyPath().toString(), cv.getMessage());
         }
 
         public String getField() {
