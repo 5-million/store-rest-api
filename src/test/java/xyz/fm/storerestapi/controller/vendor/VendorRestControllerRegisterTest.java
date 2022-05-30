@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import xyz.fm.storerestapi.dto.vendor.VendorManagerJoinRequest;
 import xyz.fm.storerestapi.dto.vendor.VendorRegisterRequest;
 import xyz.fm.storerestapi.entity.Address;
 import xyz.fm.storerestapi.entity.Vendor;
@@ -13,9 +14,12 @@ import xyz.fm.storerestapi.entity.user.Phone;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorException;
+import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorManagerException;
+import xyz.fm.storerestapi.exception.entity.notfound.VendorNotFoundException;
 import xyz.fm.storerestapi.exception.value.duplicate.DuplicatePhoneException;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -176,5 +180,123 @@ public class VendorRestControllerRegisterTest extends VendorRestControllerTest {
                 .andExpect(jsonPath("$.location.zipcode").value(vendor.getLocation().getZipcode()))
                 .andExpect(jsonPath("$.location.base").value(vendor.getLocation().getBase()))
                 .andExpect(jsonPath("$.location.detail").value(vendor.getLocation().getDetail()));
+    }
+
+    @Test
+    void joinVendorManager_400_PwdNotEqualToConfirmPwd() throws Exception {
+        //given
+        VendorManagerJoinRequest request = buildVendorManagerRegisterRequest("password", "confirmPassword");
+
+        //when
+        ResultActions ra = performJoinVendorManager(request);
+
+        //then
+        assertErrorResponse(ra, ErrorCode.PWD_NOT_EQUAL_TO_CONFIRM_PWD);
+    }
+
+    @Test
+    void joinVendorManager_404_NotFoundVendor() throws Exception {
+        //given
+        VendorManagerJoinRequest request = buildVendorManagerRegisterRequest();
+        given(vendorService.joinVendorManager(anyLong(), any(VendorManager.class)))
+                .willThrow(new VendorNotFoundException(ErrorCode.VENDOR_NOT_FOUND));
+
+        //when
+        ResultActions ra = performJoinVendorManager(request);
+
+        //then
+        assertErrorResponse(ra, ErrorCode.VENDOR_NOT_FOUND);
+    }
+
+    private VendorManagerJoinRequest buildVendorManagerRegisterRequest(String password, String confirmPassword) {
+        return new VendorManagerJoinRequest(
+                new Email("vendorManager@vendor.com"),
+                "vendorManager",
+                new Phone("01012345678"),
+                new Password(password),
+                new Password(confirmPassword),
+                1L
+        );
+    }
+
+    private VendorManagerJoinRequest buildVendorManagerRegisterRequest() {
+        return buildVendorManagerRegisterRequest("password", "password");
+    }
+
+    private ResultActions performJoinVendorManager(VendorManagerJoinRequest request) throws Exception {
+        return mvc.perform(
+                MockMvcRequestBuilders.post("/vendor/manager")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(request))
+        ).andDo(print());
+    }
+
+    @Test
+    void joinVendorManager_409_duplicateEmail() throws Exception {
+        //given
+        VendorManagerJoinRequest request = buildVendorManagerRegisterRequest();
+        given(vendorService.joinVendorManager(anyLong(), any(VendorManager.class)))
+                .willThrow(new DuplicateVendorManagerException(ErrorCode.DUPLICATE_EMAIL));
+
+        //when
+        ResultActions ra = performJoinVendorManager(request);
+
+        //then
+        assertErrorResponse(ra, ErrorCode.DUPLICATE_EMAIL);
+    }
+
+    @Test
+    void joinVendorManager_409_duplicatePhone() throws Exception {
+        //given
+        VendorManagerJoinRequest request = buildVendorManagerRegisterRequest();
+        given(vendorService.joinVendorManager(anyLong(), any(VendorManager.class)))
+                .willThrow(new DuplicatePhoneException(ErrorCode.DUPLICATE_PHONE, request.getEmail()));
+
+        //when
+        ResultActions ra = performJoinVendorManager(request);
+
+        //then
+        assertErrorResponse(ra, ErrorCode.DUPLICATE_PHONE);
+        ra
+                .andExpect(jsonPath("$.registeredEmail").value(request.getEmail().encrypt()));
+    }
+
+    @Test
+    void joinVendorManager_201() throws Exception {
+        //given
+        VendorManagerJoinRequest request = buildVendorManagerRegisterRequest();
+        Vendor vendor = new Vendor.Builder(
+                "vendor",
+                "1",
+                "ceo",
+                new Address("zipcode", "base", "detail")
+        ).id(1L).build();
+
+        VendorManager staff = new VendorManager.Builder(
+                request.getEmail(),
+                request.getName(),
+                request.getPhone(),
+                request.getPassword()
+        ).id(2L).buildStaff();
+
+        vendor.addManager(staff);
+
+        given(vendorService.joinVendorManager(anyLong(), any(VendorManager.class)))
+                .willReturn(staff);
+
+        //when
+        ResultActions ra = performJoinVendorManager(request);
+
+        //then
+        ra
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.vendorManagerId").value(staff.getId()))
+                .andExpect(jsonPath("$.vendorId").value(staff.getVendor().getId()))
+                .andExpect(jsonPath("$.email").value(staff.getEmail().toString()))
+                .andExpect(jsonPath("$.name").value(staff.getName()))
+                .andExpect(jsonPath("$.phone").value(staff.getPhone().toString()))
+                .andExpect(jsonPath("$.approved").value(false))
+                .andExpect(jsonPath("$.approvalManagerId").doesNotExist())
+                .andExpect(jsonPath("$.role").value("ROLE_VENDOR_STAFF"));
     }
 }

@@ -57,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private String[] permitAllPostPatterns() {
         return new String[]{
-                "/vendor"
+                "/vendor", "/vendor/manager"
         };
     }
 }

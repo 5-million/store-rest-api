@@ -8,6 +8,7 @@ import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorException;
 import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorManagerException;
+import xyz.fm.storerestapi.exception.entity.notfound.VendorNotFoundException;
 import xyz.fm.storerestapi.exception.value.duplicate.DuplicatePhoneException;
 import xyz.fm.storerestapi.repository.VendorManagerRepository;
 import xyz.fm.storerestapi.repository.VendorRepository;
@@ -37,7 +38,22 @@ public class VendorService {
         return vendorRepository.save(vendor);
     }
 
-    private void duplicateCheckVendor(Vendor vendor) {
+    @Transactional
+    public VendorManager joinVendorManager(long vendorId, VendorManager vendorManager) {
+        Vendor vendor = getVendorById(vendorId);
+        duplicateCheckVendorManager(vendorManager);
+
+        vendorManager.encryptPassword(passwordEncoder);
+        vendor.addManager(vendorManager);
+        return vendorManager;
+    }
+
+    public Vendor getVendorById(long vendorId) {
+        return vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new VendorNotFoundException(ErrorCode.VENDOR_NOT_FOUND));
+    }
+
+    public void duplicateCheckVendor(Vendor vendor) {
         if (vendorRepository.existsByName(vendor.getName()))
             throw new DuplicateVendorException(ErrorCode.DUPLICATE_VENDOR_NAME);
 
@@ -45,7 +61,7 @@ public class VendorService {
             throw new DuplicateVendorException(ErrorCode.DUPLICATE_VENDOR_REG_NUMBER);
     }
 
-    private void duplicateCheckVendorManager(VendorManager vendorManager) {
+    public void duplicateCheckVendorManager(VendorManager vendorManager) {
         if (vendorManagerRepository.existsByEmail(vendorManager.getEmail()))
             throw new DuplicateVendorManagerException(ErrorCode.DUPLICATE_EMAIL);
 
