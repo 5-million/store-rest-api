@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.fm.storerestapi.dto.vendor.VendorInfo;
+import xyz.fm.storerestapi.dto.vendor.VendorManagerInfo;
+import xyz.fm.storerestapi.dto.vendor.VendorManagerJoinRequest;
 import xyz.fm.storerestapi.dto.vendor.VendorRegisterRequest;
 import xyz.fm.storerestapi.entity.Vendor;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
@@ -31,5 +33,14 @@ public class VendorRestController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(VendorInfo.of(vendorService.registerVendor(vendor, executive)));
+    }
+
+    @PostMapping("manager")
+    public ResponseEntity<VendorManagerInfo> registerVendorManager(@Valid @RequestBody VendorManagerJoinRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        VendorManagerInfo.of(vendorService.joinVendorManager(request.getVendorId(), request.toEntity()))
+                );
     }
 }

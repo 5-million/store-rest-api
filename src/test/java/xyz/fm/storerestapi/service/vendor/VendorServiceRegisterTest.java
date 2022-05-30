@@ -11,14 +11,14 @@ import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.CustomException;
 import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateEntityException;
+import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorManagerException;
 import xyz.fm.storerestapi.exception.value.duplicate.DuplicatePhoneException;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -95,5 +95,71 @@ public class VendorServiceRegisterTest extends VendorServiceTest {
         assertThat(registeredVendor.getVendorManagerList().size()).isEqualTo(1);
         assertThat(registeredVendor.getVendorManagerList().get(0)).isEqualTo(executive);
         assertThat(registeredVendor.getVendorManagerList().get(0).getVendor()).isEqualTo(vendor);
+    }
+
+    @Test
+    void duplicateCheckVendorManager_throw_DuplicateVendorManagerEx() throws Exception {
+        //given
+        VendorManager staff = buildVendorManager();
+
+        given(vendorManagerRepository.existsByEmail(any(Email.class)))
+                .willReturn(true);
+
+        //when
+        DuplicateVendorManagerException exception =
+                assertThrows(DuplicateVendorManagerException.class, () -> vendorService.duplicateCheckVendorManager(staff));
+
+        //then
+        assertErrorCode(exception, ErrorCode.DUPLICATE_EMAIL);
+    }
+
+    private VendorManager buildVendorManager() {
+        return new VendorManager.Builder(
+                new Email("vendorManager@vendor.com"),
+                "vendorManager",
+                new Phone("01012345678"),
+                new Password("password")
+        ).buildStaff();
+    }
+
+    @Test
+    void duplicateCheckVendorManager_throw_DuplicatePhoneEx() throws Exception {
+        //given
+        VendorManager staff = buildVendorManager();
+
+        given(vendorManagerRepository.findByPhone(any(Phone.class)))
+                .willReturn(Optional.of(staff));
+
+        //when
+        DuplicatePhoneException exception =
+                assertThrows(DuplicatePhoneException.class, () -> vendorService.duplicateCheckVendorManager(staff));
+
+        //then
+        assertErrorCode(exception, ErrorCode.DUPLICATE_PHONE);
+    }
+
+    @Test
+    void duplicateCheckVendorManager_throw_none() throws Exception {
+        VendorManager staff = buildVendorManager();
+        vendorService.duplicateCheckVendorManager(staff);
+
+        verify(vendorManagerRepository, times(1)).existsByEmail(any(Email.class));
+        verify(vendorManagerRepository, times(1)).findByPhone(any(Phone.class));
+    }
+
+    @Test
+    void registerVendorManager_success() throws Exception {
+        //given
+        VendorManager staff = buildVendorManager();
+        given(vendorRepository.findById(anyLong())).willReturn(Optional.of(vendor));
+
+        //when
+        VendorManager registeredManager = vendorService.joinVendorManager(1, staff);
+
+        //then
+        verify(vendorRepository, times(1)).findById(anyLong());
+        assertThat(registeredManager).isEqualTo(staff);
+        assertThat(registeredManager.getVendor()).isEqualTo(vendor);
+        assertThat(vendor.getVendorManagerList().size()).isEqualTo(1);
     }
 }

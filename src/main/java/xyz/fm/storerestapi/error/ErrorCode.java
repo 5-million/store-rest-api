@@ -30,6 +30,7 @@ public enum ErrorCode {
     //vendor
     DUPLICATE_VENDOR_NAME(CONFLICT, "vendor-001", "already registered vendor name."),
     DUPLICATE_VENDOR_REG_NUMBER(CONFLICT, "vendor-002", "already registered vendor regNumber."),
+    VENDOR_NOT_FOUND(NOT_FOUND, "vendor-003", "unregistered vendor."),
 
     ;
 
