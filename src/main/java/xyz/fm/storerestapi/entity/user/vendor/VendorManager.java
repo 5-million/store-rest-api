@@ -2,6 +2,8 @@ package xyz.fm.storerestapi.entity.user.vendor;
 
 import xyz.fm.storerestapi.entity.Vendor;
 import xyz.fm.storerestapi.entity.user.*;
+import xyz.fm.storerestapi.error.ErrorCode;
+import xyz.fm.storerestapi.exception.entity.nopermission.VendorManagerAuthorityException;
 
 import javax.persistence.*;
 
@@ -34,6 +36,23 @@ public class VendorManager extends User {
     //== business ==//
     public void setVendor(Vendor vendor) {
         this.vendor = vendor;
+    }
+
+    public void approve(VendorManager manager) {
+        if (this.getRole() == Role.ROLE_VENDOR_STAFF)
+            throwVendorManagerAuthorityException(ErrorCode.REQUIRE_MORE_THEN_EXECUTIVE_ROLE);
+
+        if (!this.approved)
+            throwVendorManagerAuthorityException(ErrorCode.NOT_APPROVED_VENDOR_MANAGER);
+
+        if (this.vendor != manager.getVendor())
+            throwVendorManagerAuthorityException(ErrorCode.NOT_SAME_VENDOR);
+
+        manager.approved = true;
+    }
+
+    private void throwVendorManagerAuthorityException(ErrorCode errorCode) {
+        throw new VendorManagerAuthorityException(errorCode);
     }
 
     //== basic ==//
