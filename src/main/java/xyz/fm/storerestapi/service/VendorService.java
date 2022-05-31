@@ -4,10 +4,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.fm.storerestapi.entity.Vendor;
+import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorException;
 import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorManagerException;
+import xyz.fm.storerestapi.exception.entity.notfound.VendorManagerNotFoundException;
 import xyz.fm.storerestapi.exception.entity.notfound.VendorNotFoundException;
 import xyz.fm.storerestapi.exception.value.duplicate.DuplicatePhoneException;
 import xyz.fm.storerestapi.repository.VendorManagerRepository;
@@ -51,6 +53,11 @@ public class VendorService {
     public Vendor getVendorById(long vendorId) {
         return vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new VendorNotFoundException(ErrorCode.VENDOR_NOT_FOUND));
+    }
+
+    public VendorManager getVendorManagerByEmail(Email email) {
+        return vendorManagerRepository.findByEmail(email)
+                .orElseThrow(() -> new VendorManagerNotFoundException(ErrorCode.VENDOR_MANAGER_NOT_FOUND));
     }
 
     public void duplicateCheckVendor(Vendor vendor) {

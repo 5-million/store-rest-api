@@ -12,9 +12,6 @@ import xyz.fm.storerestapi.jwt.JwtAccessDeniedHandler;
 import xyz.fm.storerestapi.jwt.JwtAuthenticationEntryPoint;
 import xyz.fm.storerestapi.jwt.JwtProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -50,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, permitAllPostPatterns()).permitAll()
+                .antMatchers(HttpMethod.GET, permitHasRoleExecutiveGetPatterns()).hasRole("VENDOR_EXECUTIVE")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfiguration(jwtProvider));
@@ -58,6 +56,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private String[] permitAllPostPatterns() {
         return new String[]{
                 "/vendor", "/vendor/manager"
+        };
+    }
+
+    private String[] permitHasRoleExecutiveGetPatterns() {
+        return new String[]{
+                "/vendor/manager"
         };
     }
 }
