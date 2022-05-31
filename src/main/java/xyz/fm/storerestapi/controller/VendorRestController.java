@@ -2,28 +2,27 @@ package xyz.fm.storerestapi.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import xyz.fm.storerestapi.dto.vendor.VendorInfo;
-import xyz.fm.storerestapi.dto.vendor.VendorManagerInfo;
-import xyz.fm.storerestapi.dto.vendor.VendorManagerJoinRequest;
-import xyz.fm.storerestapi.dto.vendor.VendorRegisterRequest;
+import org.springframework.web.bind.annotation.*;
+import xyz.fm.storerestapi.dto.vendor.*;
 import xyz.fm.storerestapi.entity.Vendor;
+import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
+import xyz.fm.storerestapi.repository.query.VendorManagerQueryRepository;
 import xyz.fm.storerestapi.service.VendorService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("vendor")
 public class VendorRestController {
 
     private final VendorService vendorService;
+    private final VendorManagerQueryRepository vendorManagerQueryRepository;
 
-    public VendorRestController(VendorService vendorService) {
+    public VendorRestController(VendorService vendorService, VendorManagerQueryRepository vendorManagerQueryRepository) {
         this.vendorService = vendorService;
+        this.vendorManagerQueryRepository = vendorManagerQueryRepository;
     }
 
     @PostMapping
@@ -42,5 +41,14 @@ public class VendorRestController {
                 .body(
                         VendorManagerInfo.of(vendorService.joinVendorManager(request.getVendorId(), request.toEntity()))
                 );
+    }
+
+    @GetMapping("manager")
+    public ResponseEntity<VendorManagerList> getManagerList(Principal principal) {
+        Vendor vendor = vendorService.getVendorManagerByEmail(new Email(principal.getName())).getVendor();
+
+        return ResponseEntity.ok(
+                new VendorManagerList(vendorManagerQueryRepository.findAllByVendorId(vendor))
+        );
     }
 }

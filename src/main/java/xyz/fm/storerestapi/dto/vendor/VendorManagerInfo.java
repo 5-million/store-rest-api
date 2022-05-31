@@ -16,6 +16,17 @@ public class VendorManagerInfo {
 
     public VendorManagerInfo() {/* empty */}
 
+    public VendorManagerInfo(Long vendorManagerId, Long vendorId, String email, String name, String phone, Boolean approved, Long approvalManagerId, Role role) {
+        this.vendorManagerId = vendorManagerId;
+        this.vendorId = vendorId;
+        this.email = email;
+        this.name = name;
+        this.phone = phone;
+        this.approved = approved;
+        this.approvalManagerId = approvalManagerId;
+        this.role = role;
+    }
+
     public static VendorManagerInfo of(Long vendorManagerId, Long vendorId, String email, String name, String phone, Boolean approved, Long approvalManagerId, Role role) {
         VendorManagerInfo info = new VendorManagerInfo();
         info.vendorManagerId = vendorManagerId;

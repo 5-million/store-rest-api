@@ -7,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import xyz.fm.storerestapi.controller.ControllerTestConfig;
 import xyz.fm.storerestapi.controller.VendorRestController;
+import xyz.fm.storerestapi.repository.query.VendorManagerQueryRepository;
 import xyz.fm.storerestapi.service.VendorService;
 
 @WebMvcTest(VendorRestController.class)
@@ -16,4 +17,5 @@ public abstract class VendorRestControllerTest extends ControllerTestConfig {
 
     @Autowired protected MockMvc mvc;
     @MockBean protected VendorService vendorService;
+    @MockBean protected VendorManagerQueryRepository vendorManagerQueryRepository;
 }
