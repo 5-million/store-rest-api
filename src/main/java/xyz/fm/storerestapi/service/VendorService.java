@@ -55,9 +55,19 @@ public class VendorService {
                 .orElseThrow(() -> new VendorNotFoundException(ErrorCode.VENDOR_NOT_FOUND));
     }
 
+    public VendorManager getVendorManagerById(Long id) {
+        return vendorManagerRepository.findById(id)
+                .orElseThrow(() -> new VendorManagerNotFoundException(ErrorCode.VENDOR_MANAGER_NOT_FOUND));
+    }
+
     public VendorManager getVendorManagerByEmail(Email email) {
         return vendorManagerRepository.findByEmail(email)
                 .orElseThrow(() -> new VendorManagerNotFoundException(ErrorCode.VENDOR_MANAGER_NOT_FOUND));
+    }
+
+    @Transactional
+    public void approveManager(VendorManager executive, VendorManager target) {
+        executive.approve(target);
     }
 
     public void duplicateCheckVendor(Vendor vendor) {

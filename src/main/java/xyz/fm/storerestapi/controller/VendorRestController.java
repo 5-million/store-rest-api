@@ -51,4 +51,11 @@ public class VendorRestController {
                 new VendorManagerList(vendorManagerQueryRepository.findAllByVendorId(vendor))
         );
     }
+
+    @PatchMapping("manager/approve/{targetId}")
+    public void approveManager(@PathVariable("targetId") Long targetId, Principal principal) {
+        VendorManager executive = vendorService.getVendorManagerByEmail(new Email(principal.getName()));
+        VendorManager target = vendorService.getVendorManagerById(targetId);
+        vendorService.approveManager(executive, target);
+    }
 }

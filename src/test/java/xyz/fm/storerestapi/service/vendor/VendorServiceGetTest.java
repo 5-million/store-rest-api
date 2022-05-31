@@ -48,4 +48,20 @@ public class VendorServiceGetTest extends VendorServiceTest {
         //then
         assertErrorCode(exception, ErrorCode.VENDOR_MANAGER_NOT_FOUND);
     }
+
+    @Test
+    void getVendorManagerById_throw_VendorManagerNotFoundEx() throws Exception {
+        //given
+        given(vendorManagerRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        //when
+        VendorManagerNotFoundException exception =
+                assertThrows(
+                        VendorManagerNotFoundException.class,
+                        () -> vendorService.getVendorManagerById(1L)
+                );
+
+        //then
+        assertErrorCode(exception, ErrorCode.VENDOR_MANAGER_NOT_FOUND);
+    }
 }

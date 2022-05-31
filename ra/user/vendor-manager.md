@@ -51,6 +51,7 @@ Vendor와 VendorManager의 관계는 `일대다`이다.
 - email과 phone은 유효성 검사
 
 2. VendorManager 전체 조회
+- url: `/vendor/manager`로 하며 JWT의 subject claim을 통해 vendor id를 구한다.
 - QueryRepository로 DB로부터 DTO로 조회
 - Service 계층을 거치지 않고 Controller에서 바로 접근
 - 해당 공급업체의 `임원(ROLE_VENDOR_EXECUTIVE)` 이상의 권한을 가진 사용자만 요청 가능
@@ -80,4 +81,5 @@ Vendor와 VendorManager의 관계는 `일대다`이다.
 3. VendorManager 승인
 - 해당 공급업체의 `임원(ROLE_VENDOR_EXECUTIVE)` 이상의 권한을 가진 사용자만 요청 가능
 - `PATCH /vendor/manager/approve/{id}`
-- 승인 성공시 `200`
+- 승인 성공시 `200` 응답
+- 해당 공급업체의 직원이 아닐 경우 `403` 응답
