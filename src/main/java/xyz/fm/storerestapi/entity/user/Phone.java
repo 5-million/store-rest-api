@@ -23,7 +23,7 @@ public class Phone {
 
     public Phone(String phone) {
         this.phone = phone;
-//        fillTransientField();
+        fillTransientField();
     }
 
     protected void postLoad() {
