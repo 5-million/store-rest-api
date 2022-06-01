@@ -23,12 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ConsumerRestControllerJoinTest extends ConsumerRestControllerTest {
 
-    private final String URL = "/api/consumer/join";
+    private final String URL = "/consumer";
 
     @Test
     void join_fail_invalidArgument() throws Exception {
         //given
-        ConsumerJoinRequest request = buildRequest("abc", "password", "password", "0101234567");
+        ConsumerJoinRequest request = buildRequest("abc", "password", "password", "01-01234567");
 
         //when
         ResultActions result = performJoin(request);

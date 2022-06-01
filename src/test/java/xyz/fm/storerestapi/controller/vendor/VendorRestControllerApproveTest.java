@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
     private static final Long staffId = 2L;
-    private static final String URL = "/vendor/manager/approve/" + staffId;
+    private static final String URL = "/vendor/manager/" + staffId + "/approve";
 
     private final TestJwtFactory testJwtFactory;
     private VendorManager executive, staff;
@@ -69,7 +69,7 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
     @Test
     void approveManager_401() throws Exception {
         ResultActions ra = mvc.perform(
-                MockMvcRequestBuilders.patch(URL)
+                MockMvcRequestBuilders.post(URL)
         ).andDo(print());
 
         assertErrorCode(ra, ErrorCode.JWT_UNAUTHORIZED);
@@ -147,7 +147,7 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
     private ResultActions performApproveManager(String accessToken) throws Exception {
         return mvc.perform(
-                MockMvcRequestBuilders.patch(URL)
+                MockMvcRequestBuilders.post(URL)
                         .header(
                                 JwtAuthenticationFilter.AUTHORIZATION_HEADER,
                                 JwtAuthenticationFilter.BEARER_PREFIX + accessToken
@@ -174,18 +174,5 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
         given(vendorService.getVendorManagerById(anyLong()))
                 .willReturn(staff);
-    }
-
-    @Test
-    void test() throws Exception {
-        ErrorCode errorCode = ErrorCode.NOT_SAME_VENDOR;
-        approveManagerDoThrow(errorCode);
-
-        VendorManagerAuthorityException exception =
-                Assertions.assertThrows(VendorManagerAuthorityException.class, () -> vendorService.approveManager(
-                        executive, staff
-                ));
-
-        Assertions.assertEquals(errorCode, exception.getErrorCode());
     }
 }

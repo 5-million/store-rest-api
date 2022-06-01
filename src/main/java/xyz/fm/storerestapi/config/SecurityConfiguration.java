@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, permitAllPostPatterns()).permitAll()
                 .antMatchers(HttpMethod.GET, permitHasRoleExecutiveGetPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
-                .antMatchers(HttpMethod.PATCH, permitHasRoleExecutivePatchPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
+                .antMatchers(HttpMethod.POST, permitHasRoleExecutivePostPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfiguration(jwtProvider));
@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private String[] permitAllPostPatterns() {
         return new String[]{
-                "/vendor", "/vendor/manager"
+                "/consumer", "/vendor", "/vendor/manager"
         };
     }
 
@@ -68,9 +68,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         };
     }
 
-    private String[] permitHasRoleExecutivePatchPatterns() {
+    private String[] permitHasRoleExecutivePostPatterns() {
         return new String[]{
-                "/vendor/manager/approve/{targetId}"
+                "/vendor/manager/{targetId}/approve"
         };
     }
 }

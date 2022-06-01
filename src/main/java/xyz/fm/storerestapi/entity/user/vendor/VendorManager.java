@@ -48,6 +48,7 @@ public class VendorManager extends User {
         if (this.vendor != manager.getVendor())
             throwVendorManagerAuthorityException(ErrorCode.NOT_SAME_VENDOR);
 
+        manager.approvalManager = this;
         manager.approved = true;
     }
 

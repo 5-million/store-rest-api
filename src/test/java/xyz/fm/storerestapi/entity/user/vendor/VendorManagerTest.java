@@ -102,5 +102,6 @@ class VendorManagerTest {
         executive.approve(staff);
 
         assertThat(staff.isApproved()).isTrue();
+        assertThat(staff.getApprovalManager()).isEqualTo(executive);
     }
 }

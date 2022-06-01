@@ -52,7 +52,7 @@ public class VendorRestController {
         );
     }
 
-    @PatchMapping("manager/approve/{targetId}")
+    @PostMapping("manager/{targetId}/approve")
     public void approveManager(@PathVariable("targetId") Long targetId, Principal principal) {
         VendorManager executive = vendorService.getVendorManagerByEmail(new Email(principal.getName()));
         VendorManager target = vendorService.getVendorManagerById(targetId);
