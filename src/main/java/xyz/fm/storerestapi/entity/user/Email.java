@@ -1,9 +1,15 @@
 package xyz.fm.storerestapi.entity.user;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Embeddable
 @Access(AccessType.FIELD)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
 
     public static final String CONSTRAINT_EMAIL_MESSAGE = "It must be email format.";
@@ -13,8 +19,6 @@ public class Email {
 
     @Transient private String id;
     @Transient private String domain;
-
-    protected Email() {/* empty */}
 
     public Email(String email) {
         this.email = email;
@@ -29,18 +33,6 @@ public class Email {
         String[] split = email.split("@");
         this.id = split[0];
         this.domain = split[1];
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getDomain() {
-        return domain;
     }
 
     @Override

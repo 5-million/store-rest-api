@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,10 @@ import javax.validation.constraints.Pattern;
 @RestController
 @RequestMapping("auth")
 @Validated
+@RequiredArgsConstructor
 public class AuthRestController {
 
     private final AuthService authService;
-
-    public AuthRestController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("login")
     public ResponseEntity<Tokens> login(

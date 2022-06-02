@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,17 +16,13 @@ import xyz.fm.storerestapi.repository.VendorManagerRepository;
 import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     public static final String EMAIL_TYPE_SEPARATOR = ":";
 
     private final ConsumerRepository consumerRepository;
     private final VendorManagerRepository vendorManagerRepository;
-
-    public CustomUserDetailsService(ConsumerRepository consumerRepository, VendorManagerRepository vendorManagerRepository) {
-        this.consumerRepository = consumerRepository;
-        this.vendorManagerRepository = vendorManagerRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

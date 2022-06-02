@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +16,11 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("vendor")
+@RequiredArgsConstructor
 public class VendorRestController {
 
     private final VendorService vendorService;
     private final VendorManagerQueryRepository vendorManagerQueryRepository;
-
-    public VendorRestController(VendorService vendorService, VendorManagerQueryRepository vendorManagerQueryRepository) {
-        this.vendorService = vendorService;
-        this.vendorManagerQueryRepository = vendorManagerQueryRepository;
-    }
 
     @PostMapping
     public ResponseEntity<VendorInfo> registerVendor(@Valid @RequestBody VendorRegisterRequest request) {
@@ -52,7 +49,7 @@ public class VendorRestController {
         );
     }
 
-    @PatchMapping("manager/approve/{targetId}")
+    @PostMapping("manager/{targetId}/approve")
     public void approveManager(@PathVariable("targetId") Long targetId, Principal principal) {
         VendorManager executive = vendorService.getVendorManagerByEmail(new Email(principal.getName()));
         VendorManager target = vendorService.getVendorManagerById(targetId);

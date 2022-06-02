@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,7 @@ import xyz.fm.storerestapi.jwt.JwtAuthenticationEntryPoint;
 import xyz.fm.storerestapi.jwt.JwtProvider;
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String ROLE_VENDOR_EXECUTIVE = "VENDOR_EXECUTIVE";
@@ -20,15 +22,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-    public SecurityConfiguration(
-            JwtProvider jwtProvider,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            JwtAccessDeniedHandler jwtAccessDeniedHandler) {
-        this.jwtProvider = jwtProvider;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, permitAllPostPatterns()).permitAll()
                 .antMatchers(HttpMethod.GET, permitHasRoleExecutiveGetPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
-                .antMatchers(HttpMethod.PATCH, permitHasRoleExecutivePatchPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
+                .antMatchers(HttpMethod.POST, permitHasRoleExecutivePostPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfiguration(jwtProvider));
@@ -58,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private String[] permitAllPostPatterns() {
         return new String[]{
-                "/vendor", "/vendor/manager"
+                "/consumer", "/vendor", "/vendor/manager"
         };
     }
 
@@ -68,9 +61,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         };
     }
 
-    private String[] permitHasRoleExecutivePatchPatterns() {
+    private String[] permitHasRoleExecutivePostPatterns() {
         return new String[]{
-                "/vendor/manager/approve/{targetId}"
+                "/vendor/manager/{targetId}/approve"
         };
     }
 }

@@ -1,5 +1,9 @@
 package xyz.fm.storerestapi.entity.user;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
@@ -8,6 +12,8 @@ import javax.validation.constraints.Pattern;
 
 @Embeddable
 @Access(AccessType.FIELD)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Phone {
 
     public static final String CONSTRAINT_PHONE_MESSAGE = "It must be phone number format.";
@@ -18,8 +24,6 @@ public class Phone {
     @Transient private String first;
     @Transient private String middle;
     @Transient private String last;
-
-    protected Phone() {/* empty */}
 
     public Phone(String phone) {
         this.phone = phone;
@@ -42,22 +46,6 @@ public class Phone {
             this.last = phone.substring(7, 11);
             phone = first + "-" + middle + "-" + last;
         }
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getFirst() {
-        return first;
-    }
-
-    public String getMiddle() {
-        return middle;
-    }
-
-    public String getLast() {
-        return last;
     }
 
     @Override

@@ -1,8 +1,14 @@
 package xyz.fm.storerestapi.dto.vendor;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import xyz.fm.storerestapi.entity.user.Role;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class VendorManagerInfo {
 
     private Long vendorManagerId;
@@ -14,38 +20,11 @@ public class VendorManagerInfo {
     private Long approvalManagerId;
     private Role role;
 
-    public VendorManagerInfo() {/* empty */}
-
-    public VendorManagerInfo(Long vendorManagerId, Long vendorId, String email, String name, String phone, Boolean approved, Long approvalManagerId, Role role) {
-        this.vendorManagerId = vendorManagerId;
-        this.vendorId = vendorId;
-        this.email = email;
-        this.name = name;
-        this.phone = phone;
-        this.approved = approved;
-        this.approvalManagerId = approvalManagerId;
-        this.role = role;
-    }
-
-    public static VendorManagerInfo of(Long vendorManagerId, Long vendorId, String email, String name, String phone, Boolean approved, Long approvalManagerId, Role role) {
-        VendorManagerInfo info = new VendorManagerInfo();
-        info.vendorManagerId = vendorManagerId;
-        info.vendorId = vendorId;
-        info.email = email;
-        info.name = name;
-        info.phone = phone;
-        info.approved = approved;
-        info.approvalManagerId = approvalManagerId;
-        info.role = role;
-
-        return info;
-    }
-
     public static VendorManagerInfo of(VendorManager vendorManager) {
         VendorManager approvalManager = vendorManager.getApprovalManager();
         Long approvalManagerId = approvalManager == null ? null : approvalManager.getId();
 
-        return of(
+        return new VendorManagerInfo(
                 vendorManager.getId(),
                 vendorManager.getVendor().getId(),
                 vendorManager.getEmail().toString(),
@@ -55,37 +34,5 @@ public class VendorManagerInfo {
                 approvalManagerId,
                 vendorManager.getRole()
         );
-    }
-
-    public Long getVendorManagerId() {
-        return vendorManagerId;
-    }
-
-    public Long getVendorId() {
-        return vendorId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public Boolean getApproved() {
-        return approved;
-    }
-
-    public Long getApprovalManagerId() {
-        return approvalManagerId;
-    }
-
-    public Role getRole() {
-        return role;
     }
 }

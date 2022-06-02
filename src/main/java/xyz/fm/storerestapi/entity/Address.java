@@ -1,36 +1,24 @@
 package xyz.fm.storerestapi.entity;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
 @Embeddable
 @Access(AccessType.FIELD)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Address {
 
     private String zipcode;
     private String base;
     private String detail;
-
-    protected Address() {/* empty */}
-
-    public Address(String zipcode, String base, String detail) {
-        this.zipcode = zipcode;
-        this.base = base;
-        this.detail = detail;
-    }
-
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public String getBase() {
-        return base;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
 
     @Override
     public String toString() {

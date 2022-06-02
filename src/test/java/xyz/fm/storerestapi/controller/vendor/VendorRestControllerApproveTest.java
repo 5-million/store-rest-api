@@ -12,6 +12,7 @@ import xyz.fm.storerestapi.entity.Vendor;
 import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.Password;
 import xyz.fm.storerestapi.entity.user.Phone;
+import xyz.fm.storerestapi.entity.user.Role;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.entity.nopermission.VendorManagerAuthorityException;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
     private static final Long staffId = 2L;
-    private static final String URL = "/vendor/manager/approve/" + staffId;
+    private static final String URL = "/vendor/manager/" + staffId + "/approve";
 
     private final TestJwtFactory testJwtFactory;
     private VendorManager executive, staff;
@@ -42,26 +43,32 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        Vendor vendor = new Vendor.Builder(
-                "vendor",
-                "1",
-                "ceo",
-                new Address("zipcode", "base", "detail")
-        ).id(0L).build();
+        Vendor vendor = Vendor.builder()
+                .name("vendor")
+                .regNumber("1")
+                .ceo("ceo")
+                .location(new Address("zipcode", "base", "detail"))
+                .id(0L)
+                .build();
 
-        executive = new VendorManager.Builder(
-                new Email("executive@vendor.com"),
-                "executive",
-                new Phone("01012345678"),
-                new Password("password")
-        ).id(1L).approved(true).buildExecutive();
+        executive = VendorManager.builder()
+                .email(new Email("executive@vendor.com"))
+                .name("executive")
+                .phone(new Phone("01012345678"))
+                .password(new Password("password"))
+                .id(1L)
+                .approved(true)
+                .role(Role.ROLE_VENDOR_EXECUTIVE)
+                .build();
 
-        staff = new VendorManager.Builder(
-                new Email("staff@vendor.com"),
-                "staff",
-                new Phone("01012345679"),
-                new Password("password")
-        ).id(staffId).buildStaff();
+        staff = VendorManager.builder()
+                .email(new Email("staff@vendor.com"))
+                .name("staff")
+                .phone(new Phone("01012345679"))
+                .password(new Password("password"))
+                .id(staffId)
+                .role(Role.ROLE_VENDOR_STAFF)
+                .build();
 
         executiveAccessToken = testJwtFactory.buildAccessToken(executive);
     }
@@ -69,7 +76,7 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
     @Test
     void approveManager_401() throws Exception {
         ResultActions ra = mvc.perform(
-                MockMvcRequestBuilders.patch(URL)
+                MockMvcRequestBuilders.post(URL)
         ).andDo(print());
 
         assertErrorCode(ra, ErrorCode.JWT_UNAUTHORIZED);
@@ -147,7 +154,7 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
     private ResultActions performApproveManager(String accessToken) throws Exception {
         return mvc.perform(
-                MockMvcRequestBuilders.patch(URL)
+                MockMvcRequestBuilders.post(URL)
                         .header(
                                 JwtAuthenticationFilter.AUTHORIZATION_HEADER,
                                 JwtAuthenticationFilter.BEARER_PREFIX + accessToken
@@ -174,18 +181,5 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
         given(vendorService.getVendorManagerById(anyLong()))
                 .willReturn(staff);
-    }
-
-    @Test
-    void test() throws Exception {
-        ErrorCode errorCode = ErrorCode.NOT_SAME_VENDOR;
-        approveManagerDoThrow(errorCode);
-
-        VendorManagerAuthorityException exception =
-                Assertions.assertThrows(VendorManagerAuthorityException.class, () -> vendorService.approveManager(
-                        executive, staff
-                ));
-
-        Assertions.assertEquals(errorCode, exception.getErrorCode());
     }
 }

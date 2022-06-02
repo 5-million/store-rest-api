@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,17 +18,12 @@ import xyz.fm.storerestapi.repository.VendorRepository;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class VendorService {
 
     private final VendorRepository vendorRepository;
     private final VendorManagerRepository vendorManagerRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public VendorService(VendorRepository vendorRepository, VendorManagerRepository vendorManagerRepository, PasswordEncoder passwordEncoder) {
-        this.vendorRepository = vendorRepository;
-        this.vendorManagerRepository = vendorManagerRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Transactional
     public Vendor registerVendor(Vendor vendor, VendorManager executive) {
