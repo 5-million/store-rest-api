@@ -1,10 +1,16 @@
 package xyz.fm.storerestapi.entity.user.consumer;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import xyz.fm.storerestapi.entity.user.*;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Consumer extends User {
 
     @Id @GeneratedValue
@@ -14,20 +20,12 @@ public class Consumer extends User {
     @Embedded
     private AdReceive adReceive;
 
-    protected Consumer() {/* empty */}
-
-    private Consumer(Builder builder) {
-        super(builder.email, builder.name, builder.phone, builder.password, Role.ROLE_CONSUMER);
-        id = builder.id;
-        adReceive = builder.adReceive;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public AdReceive getAdReceive() {
-        return adReceive;
+    @Builder
+    private Consumer(Email email, String name, Phone phone, Password password, Long id, AdReceive adReceive) {
+        super(email, name, phone, Role.ROLE_CONSUMER, password);
+        this.id = id;
+        this.adReceive =
+                adReceive == null ? new AdReceive(true, false, true) : adReceive;
     }
 
     @Override
@@ -41,36 +39,5 @@ public class Consumer extends User {
                 ", lastModifiedDate: " + getLastModifiedDate() +
                 ", " + adReceive.toString() +
                 ")";
-    }
-
-    //== builder ==//
-    public static class Builder {
-        private Long id;
-        private final Email email;
-        private final String name;
-        private final Phone phone;
-        private final Password password;
-        private AdReceive adReceive = new AdReceive(true, true, true);
-
-        public Builder(Email email, String name, Phone phone, Password password) {
-            this.email = email;
-            this.name = name;
-            this.phone = phone;
-            this.password = password;
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder adReceive(AdReceive adReceive) {
-            this.adReceive = adReceive;
-            return this;
-        }
-
-        public Consumer build() {
-            return new Consumer(this);
-        }
     }
 }

@@ -12,6 +12,7 @@ import xyz.fm.storerestapi.entity.Vendor;
 import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.Password;
 import xyz.fm.storerestapi.entity.user.Phone;
+import xyz.fm.storerestapi.entity.user.Role;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.jwt.JwtAuthenticationFilter;
@@ -41,27 +42,34 @@ public class VendorRestControllerGetTest extends VendorRestControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        vendor = new Vendor
-                .Builder("vendor", "1", "ceo", new Address("zipcode", "base", "detail"))
+        vendor = Vendor.builder()
+                .name("vendor")
+                .regNumber("1")
+                .ceo("ceo")
+                .location(new Address("zipcode", "base", "detail"))
                 .id(1L)
                 .build();
 
-        executive = new VendorManager.Builder(
-                new Email("executive@vendor.com"),
-                "executive",
-                new Phone("01012341234"),
-                new Password("password")
-        ).id(0L).buildExecutive();
+        executive = VendorManager.builder()
+                .email(new Email("executive@vendor.com"))
+                .name("executive")
+                .phone(new Phone("01012341234"))
+                .password(new Password("password"))
+                .id(0L)
+                .role(Role.ROLE_VENDOR_EXECUTIVE)
+                .build();
 
         vendor.addManager(executive);
         for (int i = 0; i < 10; i++) {
             vendor.addManager(
-                    new VendorManager.Builder(
-                            new Email("staff" + i + "@vendor.com"),
-                            "staff" + i,
-                            new Phone("0101234567" + i),
-                            new Password("password")
-                    ).id((long) i + 1).buildStaff()
+                    VendorManager.builder()
+                            .email(new Email("staff" + i + "@vendor.com"))
+                            .name("staff" + i)
+                            .phone(new Phone("0101234567" + i))
+                            .password(new Password("password"))
+                            .id((long) i + 1)
+                            .role(Role.ROLE_VENDOR_STAFF)
+                            .build()
             );
         }
 

@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,13 +15,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("consumer")
+@RequiredArgsConstructor
 public class ConsumerRestController {
 
     private final ConsumerService consumerService;
-
-    public ConsumerRestController(ConsumerService consumerService) {
-        this.consumerService = consumerService;
-    }
 
     @PostMapping
     public ResponseEntity<ConsumerInfo> join(@Valid @RequestBody ConsumerJoinRequest request) {

@@ -42,7 +42,11 @@ public class JwtProvider {
         String accessToken = generateToken(authentication, accessTokenKey, accessTokenExp);
         String refreshToken = generateToken(authentication, refreshTokenKey, refreshTokenExp);
 
-        return new Jwt.Builder(authentication.getName(), accessToken, refreshToken).build();
+        return Jwt.builder()
+                .email(authentication.getName())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     private String generateToken(Authentication authentication, Key tokenKey, long expiration) {

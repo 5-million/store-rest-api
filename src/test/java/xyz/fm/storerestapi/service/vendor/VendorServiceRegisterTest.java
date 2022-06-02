@@ -7,6 +7,7 @@ import xyz.fm.storerestapi.entity.Vendor;
 import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.Password;
 import xyz.fm.storerestapi.entity.user.Phone;
+import xyz.fm.storerestapi.entity.user.Role;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.CustomException;
@@ -32,18 +33,21 @@ public class VendorServiceRegisterTest extends VendorServiceTest {
     @BeforeEach
     void beforeEach() {
         location = new Address("zipcode", "base address", "detail address");
-        vendor = new Vendor.Builder(
-                "store",
-                "1",
-                "kim",
-                location
-        ).build();
-        executive = new VendorManager.Builder(
-                new Email("executive@vendor.com"),
-                "executive",
-                new Phone("01012345678"),
-                new Password("password")
-        ).approved(true).buildExecutive();
+        vendor = Vendor.builder()
+                .name("store")
+                .regNumber("1")
+                .ceo("kim")
+                .location(location)
+                .build();
+
+        executive = VendorManager.builder()
+                .email(new Email("executive@vendor.com"))
+                .name("executive")
+                .phone(new Phone("01012345678"))
+                .password(new Password("password"))
+                .approved(true)
+                .role(Role.ROLE_VENDOR_EXECUTIVE)
+                .build();
     }
 
     @Test
@@ -51,14 +55,6 @@ public class VendorServiceRegisterTest extends VendorServiceTest {
         given(vendorRepository.existsByName(anyString())).willReturn(true);
         DuplicateEntityException exception = assertDuplicateEx();
         assertErrorCode(exception, ErrorCode.DUPLICATE_VENDOR_NAME);
-    }
-
-    private DuplicateEntityException assertDuplicateEx() {
-        return assertThrows(DuplicateEntityException.class, () -> vendorService.registerVendor(vendor, executive));
-    }
-
-    private void assertErrorCode(CustomException exception, ErrorCode expected) {
-        assertThat(exception.getErrorCode()).isEqualTo(expected);
     }
 
     @Test
@@ -113,15 +109,6 @@ public class VendorServiceRegisterTest extends VendorServiceTest {
         assertErrorCode(exception, ErrorCode.DUPLICATE_EMAIL);
     }
 
-    private VendorManager buildVendorManager() {
-        return new VendorManager.Builder(
-                new Email("vendorManager@vendor.com"),
-                "vendorManager",
-                new Phone("01012345678"),
-                new Password("password")
-        ).buildStaff();
-    }
-
     @Test
     void duplicateCheckVendorManager_throw_DuplicatePhoneEx() throws Exception {
         //given
@@ -161,5 +148,23 @@ public class VendorServiceRegisterTest extends VendorServiceTest {
         assertThat(registeredManager).isEqualTo(staff);
         assertThat(registeredManager.getVendor()).isEqualTo(vendor);
         assertThat(vendor.getVendorManagerList().size()).isEqualTo(1);
+    }
+
+    private DuplicateEntityException assertDuplicateEx() {
+        return assertThrows(DuplicateEntityException.class, () -> vendorService.registerVendor(vendor, executive));
+    }
+
+    private void assertErrorCode(CustomException exception, ErrorCode expected) {
+        assertThat(exception.getErrorCode()).isEqualTo(expected);
+    }
+
+    private VendorManager buildVendorManager() {
+        return VendorManager.builder()
+                .email(new Email("vendorManager@vendor.com"))
+                .name("vendorManager")
+                .phone(new Phone("01012345678"))
+                .password(new Password("password"))
+                .role(Role.ROLE_VENDOR_STAFF)
+                .build();
     }
 }

@@ -26,12 +26,18 @@ public class ConsumerServiceJoinTest extends ConsumerServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        consumer = new Consumer.Builder(
-                new Email("test@test.com"),
-                "test",
-                new Phone("01012345678"),
-                new Password("password")
-        ).id(1L).build();
+        consumer = Consumer.builder()
+                .email(new Email("test@test.com"))
+                .name("test")
+                .phone(new Phone("01012345678"))
+                .password(new Password("password"))
+                .id(1L)
+                .build();
+    }
+
+    @Test
+    void test() {
+        System.out.println(consumer);
     }
 
     @Test

@@ -1,8 +1,14 @@
 package xyz.fm.storerestapi.dto.vendor;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import xyz.fm.storerestapi.entity.Address;
 import xyz.fm.storerestapi.entity.Vendor;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class VendorInfo {
 
     private Long id;
@@ -19,25 +25,5 @@ public class VendorInfo {
         info.regNumber = vendor.getRegNumber();
         info.location = vendor.getLocation();
         return info;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCeo() {
-        return ceo;
-    }
-
-    public String getRegNumber() {
-        return regNumber;
-    }
-
-    public Address getLocation() {
-        return location;
     }
 }

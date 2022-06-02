@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +16,11 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("vendor")
+@RequiredArgsConstructor
 public class VendorRestController {
 
     private final VendorService vendorService;
     private final VendorManagerQueryRepository vendorManagerQueryRepository;
-
-    public VendorRestController(VendorService vendorService, VendorManagerQueryRepository vendorManagerQueryRepository) {
-        this.vendorService = vendorService;
-        this.vendorManagerQueryRepository = vendorManagerQueryRepository;
-    }
 
     @PostMapping
     public ResponseEntity<VendorInfo> registerVendor(@Valid @RequestBody VendorRegisterRequest request) {

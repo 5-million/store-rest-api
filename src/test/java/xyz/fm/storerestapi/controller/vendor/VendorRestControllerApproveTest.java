@@ -12,6 +12,7 @@ import xyz.fm.storerestapi.entity.Vendor;
 import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.Password;
 import xyz.fm.storerestapi.entity.user.Phone;
+import xyz.fm.storerestapi.entity.user.Role;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.entity.nopermission.VendorManagerAuthorityException;
@@ -42,26 +43,32 @@ public class VendorRestControllerApproveTest extends VendorRestControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        Vendor vendor = new Vendor.Builder(
-                "vendor",
-                "1",
-                "ceo",
-                new Address("zipcode", "base", "detail")
-        ).id(0L).build();
+        Vendor vendor = Vendor.builder()
+                .name("vendor")
+                .regNumber("1")
+                .ceo("ceo")
+                .location(new Address("zipcode", "base", "detail"))
+                .id(0L)
+                .build();
 
-        executive = new VendorManager.Builder(
-                new Email("executive@vendor.com"),
-                "executive",
-                new Phone("01012345678"),
-                new Password("password")
-        ).id(1L).approved(true).buildExecutive();
+        executive = VendorManager.builder()
+                .email(new Email("executive@vendor.com"))
+                .name("executive")
+                .phone(new Phone("01012345678"))
+                .password(new Password("password"))
+                .id(1L)
+                .approved(true)
+                .role(Role.ROLE_VENDOR_EXECUTIVE)
+                .build();
 
-        staff = new VendorManager.Builder(
-                new Email("staff@vendor.com"),
-                "staff",
-                new Phone("01012345679"),
-                new Password("password")
-        ).id(staffId).buildStaff();
+        staff = VendorManager.builder()
+                .email(new Email("staff@vendor.com"))
+                .name("staff")
+                .phone(new Phone("01012345679"))
+                .password(new Password("password"))
+                .id(staffId)
+                .role(Role.ROLE_VENDOR_STAFF)
+                .build();
 
         executiveAccessToken = testJwtFactory.buildAccessToken(executive);
     }

@@ -11,6 +11,7 @@ import xyz.fm.storerestapi.entity.Vendor;
 import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.Password;
 import xyz.fm.storerestapi.entity.user.Phone;
+import xyz.fm.storerestapi.entity.user.Role;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 import xyz.fm.storerestapi.error.ErrorCode;
 import xyz.fm.storerestapi.exception.entity.duplicate.DuplicateVendorException;
@@ -30,7 +31,7 @@ public class VendorRestControllerRegisterTest extends VendorRestControllerTest {
     @Test
     void registerVendor_400_invalidRequestValue() throws Exception {
         //given
-        VendorRegisterRequest request = buildVendorRegisterRequest("executive", "01012345", "password", "password");
+        VendorRegisterRequest request = buildVendorRegisterRequest("executive", "01012345---", "password", "password");
 
         //when
         ResultActions ra = performRegisterVendor(request);
@@ -157,12 +158,7 @@ public class VendorRestControllerRegisterTest extends VendorRestControllerTest {
     void registerVendor_201() throws Exception {
         //given
         VendorRegisterRequest request = buildVendorRegisterRequest();
-        Vendor vendor = new Vendor.Builder(
-                request.getName(),
-                request.getRegNumber(),
-                request.getCeo(),
-                request.getLocation()
-        ).id(1L).build();
+        Vendor vendor = buildVendor(request.getName(), request.getRegNumber(), request.getCeo(), request.getLocation(), 1L);
 
         given(vendorService.registerVendor(any(Vendor.class), any(VendorManager.class)))
                 .willReturn(vendor);
@@ -208,29 +204,6 @@ public class VendorRestControllerRegisterTest extends VendorRestControllerTest {
         assertErrorResponse(ra, ErrorCode.VENDOR_NOT_FOUND);
     }
 
-    private VendorManagerJoinRequest buildVendorManagerRegisterRequest(String password, String confirmPassword) {
-        return new VendorManagerJoinRequest(
-                new Email("vendorManager@vendor.com"),
-                "vendorManager",
-                new Phone("01012345678"),
-                new Password(password),
-                new Password(confirmPassword),
-                1L
-        );
-    }
-
-    private VendorManagerJoinRequest buildVendorManagerRegisterRequest() {
-        return buildVendorManagerRegisterRequest("password", "password");
-    }
-
-    private ResultActions performJoinVendorManager(VendorManagerJoinRequest request) throws Exception {
-        return mvc.perform(
-                MockMvcRequestBuilders.post("/vendor/manager")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(request))
-        ).andDo(print());
-    }
-
     @Test
     void joinVendorManager_409_duplicateEmail() throws Exception {
         //given
@@ -265,19 +238,16 @@ public class VendorRestControllerRegisterTest extends VendorRestControllerTest {
     void joinVendorManager_201() throws Exception {
         //given
         VendorManagerJoinRequest request = buildVendorManagerRegisterRequest();
-        Vendor vendor = new Vendor.Builder(
-                "vendor",
-                "1",
-                "ceo",
-                new Address("zipcode", "base", "detail")
-        ).id(1L).build();
+        Vendor vendor = buildVendor("vendor", "1", "ceo", new Address("zipcode", "base", "detail"), 1L);
 
-        VendorManager staff = new VendorManager.Builder(
-                request.getEmail(),
-                request.getName(),
-                request.getPhone(),
-                request.getPassword()
-        ).id(2L).buildStaff();
+        VendorManager staff = VendorManager.builder()
+                .email(request.getEmail())
+                .name(request.getName())
+                .phone(request.getPhone())
+                .password(request.getPassword())
+                .id(2L)
+                .role(Role.ROLE_VENDOR_STAFF)
+                .build();
 
         vendor.addManager(staff);
 
@@ -298,5 +268,38 @@ public class VendorRestControllerRegisterTest extends VendorRestControllerTest {
                 .andExpect(jsonPath("$.approved").value(false))
                 .andExpect(jsonPath("$.approvalManagerId").doesNotExist())
                 .andExpect(jsonPath("$.role").value("ROLE_VENDOR_STAFF"));
+    }
+
+    private Vendor buildVendor(String name, String regNumber, String ceo, Address location, Long id) {
+        return Vendor.builder()
+                .name(name)
+                .regNumber(regNumber)
+                .ceo(ceo)
+                .location(location)
+                .id(id)
+                .build();
+    }
+
+    private VendorManagerJoinRequest buildVendorManagerRegisterRequest(String password, String confirmPassword) {
+        return new VendorManagerJoinRequest(
+                new Email("vendorManager@vendor.com"),
+                "vendorManager",
+                new Phone("01012345678"),
+                new Password(password),
+                new Password(confirmPassword),
+                1L
+        );
+    }
+
+    private VendorManagerJoinRequest buildVendorManagerRegisterRequest() {
+        return buildVendorManagerRegisterRequest("password", "password");
+    }
+
+    private ResultActions performJoinVendorManager(VendorManagerJoinRequest request) throws Exception {
+        return mvc.perform(
+                MockMvcRequestBuilders.post("/vendor/manager")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(request))
+        ).andDo(print());
     }
 }

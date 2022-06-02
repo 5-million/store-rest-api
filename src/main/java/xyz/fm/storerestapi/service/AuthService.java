@@ -1,5 +1,6 @@
 package xyz.fm.storerestapi.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,17 +20,12 @@ import xyz.fm.storerestapi.repository.JwtRepository;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AuthService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
     private final JwtRepository jwtRepository;
-
-    public AuthService(AuthenticationManagerBuilder authenticationManagerBuilder, JwtProvider jwtProvider, JwtRepository jwtRepository) {
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.jwtProvider = jwtProvider;
-        this.jwtRepository = jwtRepository;
-    }
 
     public Jwt login(LoginRequest request, String type) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

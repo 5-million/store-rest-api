@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import xyz.fm.storerestapi.entity.user.Email;
 import xyz.fm.storerestapi.entity.user.Password;
 import xyz.fm.storerestapi.entity.user.Phone;
+import xyz.fm.storerestapi.entity.user.Role;
 import xyz.fm.storerestapi.entity.user.vendor.VendorManager;
 
 import javax.persistence.EntityManager;
@@ -27,12 +28,7 @@ class VendorTest {
     @BeforeEach
     void beforeEach() {
         location = new Address("zipcode", "base address", "detail address");
-        vendor = new Vendor.Builder(
-                "store",
-                "1",
-                "kim",
-                location
-        ).build();
+        vendor = buildVendor("store", "1", "kim", location);
     }
 
     @Test
@@ -50,21 +46,11 @@ class VendorTest {
         assertThat(foundVendor.getLocation().equals(vendor.getLocation())).isTrue();
     }
 
-    private void emFlushAndClear() {
-        em.flush();
-        em.clear();
-    }
-
 
     @Test
     void save_fail_duplicateVendorName() {
         //given
-        Vendor duplicatedNameVendor = new Vendor.Builder(
-                vendor.getName(),
-                "2",
-                "park",
-                location
-        ).build();
+        Vendor duplicatedNameVendor = buildVendor(vendor.getName(), "2", "park", location);
 
         //when
         em.persist(vendor);
@@ -74,19 +60,10 @@ class VendorTest {
         assertPersistenceException(this::emFlushAndClear);
     }
 
-    private void assertPersistenceException(Executable executable) {
-        assertThrows(PersistenceException.class, executable);
-    }
-
     @Test
     void save_fail_duplicateVendorRegNumber() {
         //given
-        Vendor duplicatedRegNumberVendor = new Vendor.Builder(
-                "a",
-                vendor.getRegNumber(),
-                "jo",
-                location
-        ).build();
+        Vendor duplicatedRegNumberVendor = buildVendor("a", vendor.getRegNumber(), "jo", location);
 
         //when
         em.persist(vendor);
@@ -98,12 +75,15 @@ class VendorTest {
 
     @Test
     void addManager() {
-        VendorManager executive = new VendorManager.Builder(
-                new Email("vendor@vendor.com"),
-                "executive",
-                new Phone("01012345678"),
-                new Password("password")
-        ).vendor(vendor).approved(true).buildExecutive();
+        VendorManager executive = VendorManager.builder()
+                .email(new Email("vendor@vendor.com"))
+                .name("executive")
+                .phone(new Phone("01012345678"))
+                .password(new Password("password"))
+                .vendor(vendor)
+                .approved(true)
+                .role(Role.ROLE_VENDOR_EXECUTIVE)
+                .build();
 
         vendor.addManager(executive);
 
@@ -115,5 +95,23 @@ class VendorTest {
         VendorManager foundManager = em.find(VendorManager.class, executive.getId());
         assertThat(vendor.getVendorManagerList().size()).isEqualTo(1);
         assertThat(foundManager.getVendor().getId()).isEqualTo(vendor.getId());
+    }
+
+    private Vendor buildVendor(String name, String regNumber, String ceo, Address location) {
+        return Vendor.builder()
+                .name(name)
+                .regNumber(regNumber)
+                .ceo(ceo)
+                .location(location)
+                .build();
+    }
+
+    private void emFlushAndClear() {
+        em.flush();
+        em.clear();
+    }
+
+    private void assertPersistenceException(Executable executable) {
+        assertThrows(PersistenceException.class, executable);
     }
 }

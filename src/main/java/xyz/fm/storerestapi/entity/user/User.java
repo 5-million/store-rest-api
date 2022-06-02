@@ -1,11 +1,18 @@
 package xyz.fm.storerestapi.entity.user;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import xyz.fm.storerestapi.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 
 @MappedSuperclass
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class User extends BaseTimeEntity {
 
     @Embedded
@@ -24,16 +31,6 @@ public abstract class User extends BaseTimeEntity {
     @Embedded
     private Password password;
 
-    protected User() {/* empty */}
-
-    protected User(Email email, String name, Phone phone, Password password, Role role) {
-        this.email = email;
-        this.name = name;
-        this.phone = phone;
-        this.password = password;
-        this.role = role;
-    }
-
     @PostLoad
     public void postLoad() {
         email.postLoad();
@@ -43,26 +40,5 @@ public abstract class User extends BaseTimeEntity {
     //== business ==//
     public void encryptPassword(PasswordEncoder passwordEncoder) {
         password.encrypt(passwordEncoder);
-    }
-
-    //== basic ==//
-    public Email getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Phone getPhone() {
-        return phone;
-    }
-
-    public Password getPassword() {
-        return password;
-    }
-
-    public Role getRole() {
-        return role;
     }
 }

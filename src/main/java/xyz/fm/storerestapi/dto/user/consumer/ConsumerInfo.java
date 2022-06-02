@@ -1,8 +1,14 @@
 package xyz.fm.storerestapi.dto.user.consumer;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import xyz.fm.storerestapi.entity.user.consumer.AdReceive;
 import xyz.fm.storerestapi.entity.user.consumer.Consumer;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ConsumerInfo {
 
     private String email;
@@ -18,21 +24,5 @@ public class ConsumerInfo {
         consumerInfo.adReceive = consumer.getAdReceive();
 
         return consumerInfo;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public AdReceive getAdReceive() {
-        return adReceive;
     }
 }
