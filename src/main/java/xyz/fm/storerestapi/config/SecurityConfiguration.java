@@ -18,6 +18,7 @@ import xyz.fm.storerestapi.jwt.JwtProvider;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String ROLE_VENDOR_EXECUTIVE = "VENDOR_EXECUTIVE";
+    private static final String ROLE_VENDOR_STAFF = "VENDOR_STAFF";
 
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -44,6 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, permitAllPostPatterns()).permitAll()
                 .antMatchers(HttpMethod.GET, permitHasRoleExecutiveGetPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
                 .antMatchers(HttpMethod.POST, permitHasRoleExecutivePostPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
+                .antMatchers(HttpMethod.POST, permitHasRoleMoreThenStaffPostPatterns()).hasAnyRole(ROLE_VENDOR_EXECUTIVE, ROLE_VENDOR_STAFF)
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfiguration(jwtProvider));
@@ -64,6 +66,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private String[] permitHasRoleExecutivePostPatterns() {
         return new String[]{
                 "/vendor/manager/{targetId}/approve"
+        };
+    }
+
+    private String[] permitHasRoleMoreThenStaffPostPatterns() {
+        return new String[]{
+                "/categories"
         };
     }
 }

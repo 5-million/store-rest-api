@@ -28,4 +28,17 @@ public class Category extends BaseTimeEntity {
     @OneToMany(mappedBy = "parent")
     @Builder.Default
     private List<Category> child = new ArrayList<>();
+
+    //== builder customize ==//
+    public static class CategoryBuilder {
+
+        public CategoryBuilder parent(Category parent) {
+            if (parent != null) {
+                this.parent = parent;
+                this.depth = parent.depth + 1;
+            }
+
+            return this;
+        }
+    }
 }

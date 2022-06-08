@@ -7,7 +7,7 @@
 | depth  | 카테고리 depth |
 
 - 최상위 카테고리의 `parent = null`, `depth = 0`
-- 같은 depth 내에 카테고리 이름은 유일
+- 같은 parent 내에 카테고리 이름은 유일
 
 ## 기능
 ### 1. 카테고리 등록
@@ -19,7 +19,7 @@
         "categoryName": "String"
     }
     ```
-- 같은 depth 내에 동일한 카테고리 이름이 있다면 `409` 응답
+- 같은 parent 내에 동일한 카테고리 이름이 있다면 `409` 응답
 - 등록 성공시 `201` 응답, 헤더에 location 추가 `/categories/{id}`
 - resposne data: `CategoryInfo`
     ```json
