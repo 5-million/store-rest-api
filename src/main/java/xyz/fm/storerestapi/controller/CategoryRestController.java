@@ -2,13 +2,13 @@ package xyz.fm.storerestapi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.fm.storerestapi.dto.category.CategoryBriefInfo;
 import xyz.fm.storerestapi.dto.category.CategoryRegisterRequest;
 import xyz.fm.storerestapi.entity.Category;
+import xyz.fm.storerestapi.error.ErrorCode;
+import xyz.fm.storerestapi.exception.entity.notfound.CategoryNotFoundException;
+import xyz.fm.storerestapi.repository.query.CategoryQueryRepository;
 import xyz.fm.storerestapi.service.CategoryService;
 
 import java.net.URI;
@@ -19,6 +19,7 @@ import java.net.URI;
 public class CategoryRestController {
 
     private final CategoryService categoryService;
+    private final CategoryQueryRepository categoryQueryRepository;
 
     @PostMapping
     public ResponseEntity<CategoryBriefInfo> register(@RequestBody CategoryRegisterRequest request) {
@@ -26,5 +27,13 @@ public class CategoryRestController {
 
         return ResponseEntity.created(URI.create("/categories/" + newCategory.getId()))
                 .body(CategoryBriefInfo.of(newCategory));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<CategoryBriefInfo> getById(@PathVariable("id") Long id) {
+        CategoryBriefInfo info = categoryQueryRepository.findBriefInfoById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        return ResponseEntity.ok(info);
     }
 }

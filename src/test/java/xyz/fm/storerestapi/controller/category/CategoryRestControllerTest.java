@@ -7,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import xyz.fm.storerestapi.controller.CategoryRestController;
 import xyz.fm.storerestapi.controller.ControllerTestConfig;
+import xyz.fm.storerestapi.repository.query.CategoryQueryRepository;
 import xyz.fm.storerestapi.service.CategoryService;
 
 @WebMvcTest(CategoryRestController.class)
@@ -16,5 +17,6 @@ class CategoryRestControllerTest extends ControllerTestConfig {
     protected static final ObjectMapper om = new ObjectMapper();
 
     @MockBean protected CategoryService categoryService;
+    @MockBean protected CategoryQueryRepository categoryQueryRepository;
     @Autowired protected MockMvc mvc;
 }

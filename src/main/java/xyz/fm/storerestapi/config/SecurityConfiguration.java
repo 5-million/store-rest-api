@@ -42,6 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers(HttpMethod.GET, permitAllGetPatterns()).permitAll()
                 .antMatchers(HttpMethod.POST, permitAllPostPatterns()).permitAll()
                 .antMatchers(HttpMethod.GET, permitHasRoleExecutiveGetPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
                 .antMatchers(HttpMethod.POST, permitHasRoleExecutivePostPatterns()).hasRole(ROLE_VENDOR_EXECUTIVE)
@@ -49,6 +50,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfiguration(jwtProvider));
+    }
+
+    private String[] permitAllGetPatterns() {
+        return new String[]{
+                "/categories/**"
+        };
     }
 
     private String[] permitAllPostPatterns() {
