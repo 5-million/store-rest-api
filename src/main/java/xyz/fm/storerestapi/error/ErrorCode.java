@@ -40,6 +40,10 @@ public enum ErrorCode {
     REQUIRE_MORE_THEN_EXECUTIVE_ROLE(FORBIDDEN, "vm-002", "requires more then an executive authority."),
     NOT_APPROVED_VENDOR_MANAGER(FORBIDDEN, "vm-003", "not approved vendor manager."),
     NOT_SAME_VENDOR(FORBIDDEN, "vm-004", "not same vendor."),
+
+    // category
+    DUPLICATE_CATEGORY(CONFLICT, "category-001", "already registered category."),
+    CATEGORY_NOT_FOUND(NOT_FOUND, "category-002", "unregistered category."),
     ;
 
 
