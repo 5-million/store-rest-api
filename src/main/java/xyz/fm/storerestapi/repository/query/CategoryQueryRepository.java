@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import xyz.fm.storerestapi.dto.category.CategoryBriefInfo;
 import xyz.fm.storerestapi.entity.Category;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CategoryQueryRepository extends JpaRepository<Category, Long> {
@@ -15,4 +16,6 @@ public interface CategoryQueryRepository extends JpaRepository<Category, Long> {
             "where c.id = :categoryId"
     )
     Optional<CategoryBriefInfo> findBriefInfoById(@Param("categoryId") Long id);
+
+    List<Category> findAllByDepthIs(Integer depth);
 }
